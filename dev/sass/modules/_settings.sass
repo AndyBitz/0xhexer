@@ -1,0 +1,44 @@
+.settings-menu
+	position: absolute;
+	right: 12px;
+	top: 70px;
+	z-index: 10;
+
+	#settings-menu
+
+		transform-origin: top right;
+		display: none;
+		animation: -show-menu 250ms forwards;
+
+		&.show-menu
+			display: block;
+
+		ul
+			list-style-type: none;
+			background-color: $col-bg;
+			padding: 0;
+			margin: 0;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+			border-radius: 4px;
+
+			li
+				padding: 0;
+				margin: 0;
+				display: block;
+
+				a
+					display: block;
+					padding: 8px 24px;
+					font-size: 1.2em;
+					color: $col-font;
+
+					&:hover
+						background-color: $col-hover;
+
+
+@keyframes -show-menu
+	0%
+		transform: scale(0);
+
+	100%
+		transform: scale(1);

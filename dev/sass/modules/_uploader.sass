@@ -1,0 +1,53 @@
+#uploader
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	i
+		position: absolute;
+		font-size: 6em;
+		color: $col-bg;
+		background-color: $col-prime;
+		border-radius: 100%;
+		padding: 8px;
+		cursor: pointer;
+
+		&.drop-ready
+			background-color: $col-good;
+
+.up-func-cont
+	width: 112px;
+	height: 112px;
+	overflow: hidden;
+
+#up-status
+	position: absolute;
+	width: 112px;
+	height: 112px;
+	background-color: $col-danger;
+	border-radius: 100%;
+	transform: scale(1.1);
+	opacity: 0;
+	transition: background-color 200ms ease-in-out;
+	cursor: pointer;
+
+.soft-blink
+	opacity: 1;
+	animation: -soft-blink 800ms ease-in-out infinite;
+
+@keyframes -soft-blink
+	0%
+		opacity: 1
+
+	50%
+		opacity: 0
+
+	100%
+		opacity: 1
+
+.done
+	opacity: 1!important;
+	background-color: $col-good!important;
