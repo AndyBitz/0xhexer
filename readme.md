@@ -1,6 +1,8 @@
 ##0xHEXER##
 
-> <a href="https://hex.andybitz.io">https://hex.andybitz.io</a>
+
+<a href="https://hex.andybitz.io" target="_blank">https://hex.andybitz.io</a>
+
 
 HTML5/ECMAScript 6 based Hex-Editor for browsers.<br>
 Uses gulp-sass and gulp-concat for development.
