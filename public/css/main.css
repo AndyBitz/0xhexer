@@ -23,6 +23,11 @@ a {
   a:active, a:visited, a:hover {
     text-decoration: none; }
 
+.back-btn {
+  color: #333333; }
+  .back-btn:active, .back-btn:visited, .back-btn:hover {
+    color: #333333; }
+
 .header {
   background-color: #2196F3;
   height: 80px;
@@ -195,6 +200,23 @@ a {
     .section-button a:hover {
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
 
+.section-meta {
+  text-align: center;
+  padding: 12px; }
+  .section-meta a {
+    padding: 4px 12px;
+    margin: 0 5px;
+    color: #EEEEEE;
+    background-color: #2196F3;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .section-meta a:hover {
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+  .section-meta input {
+    border: none;
+    padding: 2px; }
+
 .settings-menu {
   position: absolute;
   right: 12px;
@@ -230,3 +252,6 @@ a {
     transform: scale(0); }
   100% {
     transform: scale(1); } }
+
+.howto-class {
+  padding: 12px; }

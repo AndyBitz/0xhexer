@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf8">
 	<title>Hexer</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,6 +12,17 @@
 </head>
 <body>
 
+	<div class="settings-menu">
+		<div id="settings-menu">
+			<ul>
+				<li><a href="#" id="savefile">Save File</a></li>
+				<li><a href="https://github.com/andybitz/">Project on GitHub</a></li>
+				<li><a href="#" id="howto">How to</a></li>
+				<li><a href="http://andybitz.io" target="_blank">Author</a></li>
+			</ul>
+		</div>
+	</div>
+
 	<div class="header">
 		
 		<div class="headline">
@@ -20,17 +31,6 @@
 
 		<div class="toggle-settings">
 			<a href="#" id="toggle-settings"><i class="material-icons">more_vert</i></a>
-		</div>
-
-		<div class="settings-menu">
-			<div id="settings-menu">
-				<ul>
-					<li><a href="#" id="savefile">Save File</a></li>
-					<li><a href="https://github.com/andybitz/">Project on GitHub</a></li>
-					<li><a href="#" id="howto">How to</a></li>
-					<li><a href="http://andybitz.io" target="_blank">Author</a></li>
-				</ul>
-			</div>
 		</div>
 
 	</div>
@@ -56,9 +56,25 @@
 					<!-- TODO -->
 				</div>
 
+				<div class="section-meta">
+					<a href="#" id="skipToSection">Skip To</a><input type="number" id="curSec">/<span id="totalSec"></span>
+				</div>
+
 				<div id="hex-view">
 					
 				</div>
+			</div>
+
+			<div class="page">
+				
+				<div class="howto-class">
+					<div><a href="#" class="back-btn"><i class="material-icons">arrow_back</i></a></div>
+					<h2>What is it?</h2>
+					<p>0xHEXER is a javascript based Hex-Editor that should work with every browser that supports ECMAScript 6.</p>
+					<p>For now only the core functionality is working. This means you can load a file, edit its bytes with Hex-Values or ASCII-Chracters and save it.</p>
+					<p>But be carful! At this point you cannot undo changes or return back after your browser crashes. Everything is Client-Sided.</p>
+				</div>
+
 			</div>
 
 		</div>
