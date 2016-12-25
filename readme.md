@@ -11,4 +11,5 @@ Uses gulp-sass and gulp-concat for development.
 * implement search function
 * URL handling
 * History and Backup functions with local Storage
-* Desktop Optimization
+* desktop optimization
+* improve interface functionality
