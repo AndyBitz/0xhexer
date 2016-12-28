@@ -9,6 +9,7 @@ Uses gulp-sass and gulp-concat for development.
 
 
 ####TODOs
+* add config class for users
 * make one .section-tool fixed on desktop
 * add up/down buttons to .section-tool
 * get rid of globals
