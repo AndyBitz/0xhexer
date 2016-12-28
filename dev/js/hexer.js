@@ -84,18 +84,59 @@ hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
 	this.totalRows = this.file.size/8;					// define total rows
-	this.totalSections = Math.ceil(this.totalRows/128);	// define total Sections; one section has 128 rows
+	this.totalSections = Math.floor(this.totalRows/128);	// define total Sections; one section has 128 rows
 
 	this.currentSection = 0;	// init current Section
 
-	document.getElementById('totalSec').textContent = this.totalSections;
-	document.getElementById('curSec').min = 0;
-	document.getElementById('curSec').max = this.totalSections;
+	setDataOfArray(
+		document.querySelectorAll('[data-sec-data="sec-total"]'),
+		'textContent',
+		this.totalSections
+		);
 
-	document.getElementById('skipToSection').addEventListener('click', (e)=>{
-		this.currentSection = document.getElementById('curSec').value;
-		this.loadSection();
-	});
+	setDataOfArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'value',
+		this.currentSection
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'keyup',
+		(e)=>{
+			if (e.key == "Enter") {
+				this.currentSection = e.target.value;
+				this.loadSection();
+			}
+		}
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-action="sec-skip"]'),
+		'click',
+		(e)=>{
+			let sc = document.querySelectorAll('[data-sec-data="sec-cur"]');
+			for (let j=0; j < sc.length; j++) {
+				if (sc[j].value != this.currentSection) {
+					this.currentSection = sc[j].value;
+					break;
+				}
+			}
+			this.loadSection();
+		}
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-action="sec-next"]'),
+		'click',
+		this.nextSection.bind(this)
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-action="sec-prev"]'),
+		'click',
+		this.previousSection.bind(this)
+		);
 
 	this.loadSection();
 
@@ -105,14 +146,18 @@ hexer.prototype.createHexPage = function() {
 
 hexer.prototype.loadSection = function() {
 
+	if (this.currentSection < 0 || this.currentSection > this.totalSections)
+		this.currentSection = 0;
+
 	let output = '';
 	let row_counter = 0 + (this.currentSection*128);
 	let c = 0 + (this.currentSection*128*8);
 
-	document.getElementById('curSec').value = this.currentSection.toString();
-
-	if (this.currentSection > 0)
-		output += `<div class="section-button"><a href="#" onclick="h.previousSection();">Previous Section</a><a class="top-button" href="#" onclick="h.toBottom()"><i class="material-icons">keyboard_arrow_down</i></a></div>`;
+	setDataOfArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'value',
+		this.currentSection
+		);
 
 	// generate section
 	for (let i=0; i < 128; i++) {
@@ -124,7 +169,7 @@ hexer.prototype.loadSection = function() {
 		// generate both rows
 		for (let j=0; j < 8; j++) {
 
-			if (this.buffer.slice(c, c+1).length < 1)
+			if (this.buffer[c] == undefined)
 				break;
 
 			hex_row		+= `<input maxlength="2" class="hex-field" data-slice="${c}" value="${this.buffer[c].toString(16)}">`;
@@ -135,12 +180,9 @@ hexer.prototype.loadSection = function() {
 
 		output += `<div class="hex-row">${hex_row}</div><div class="ascii-row">${ascii_row}</div>`;
 
-		output += `</div>`; // end row
+		output += `</div>`;	// end row
 
 	}
-
-	if (this.currentSection < this.totalSections)
-		output += `<div class="section-button"><a href="#" onclick="h.nextSection();">Next Section</a><a class="top-button" href="#" onclick="h.toTop()"><i class="material-icons">keyboard_arrow_up</i></a></div>`;
 
 	this.hexPage.innerHTML = output;
 	this.init_workspace();
@@ -177,7 +219,7 @@ hexer.prototype.previousSection = function() {
 
 hexer.prototype.init_workspace = function() {
 
-	let fHandler = (e)=>{
+	let cHandler = (e)=>{
 
 		if (e.target.nodeName != 'INPUT')
 			return;
@@ -189,6 +231,7 @@ hexer.prototype.init_workspace = function() {
 		}
 
 		e.target.className += ' active';
+		e.target.select();
 
 		if ( e.target.className.match(/hex-field/g) ) {
 			
@@ -233,7 +276,7 @@ hexer.prototype.init_workspace = function() {
 
 
 	document.getElementById('hex-view').addEventListener('keyup', kHandler);
-	document.getElementById('hex-view').addEventListener('click', fHandler);
+	document.getElementById('hex-view').addEventListener('click', cHandler);
 
 };
 
@@ -243,7 +286,7 @@ hexer.prototype.saveFile = function() {
 
 	document.getElementById('savefile').addEventListener('click', (e)=>{
 
-		if (this.buffer !== undefined) {
+		if (this.buffer != undefined) {
 
 			let b = new Blob([this.buffer.buffer], {"type": "application/octet-binary"});
 			let u = URL.createObjectURL(b);
@@ -258,305 +301,3 @@ hexer.prototype.saveFile = function() {
 	});
 
 };
-
-
-/* Convert a value (0-255) to an ASCII character
- * for the ASCII Row.
- * Characters that cannot be converted will be shown as a dot.
- */
-function toAscii(val) {
-
-	if (val > 126 || val < 32)
-		return '.';
-
-	switch (val) {
-		case 32:
-			return ' ';
-
-		case 33:
-			return '!';
-
-		case 34:
-			return '"';
-
-		case 35:
-			return '#';
-
-		case 36:
-			return '$';
-
-		case 37:
-			return '%';
-
-		case 38:
-			return '&';
-
-		case 39:
-			return '\'';
-
-		case 40:
-			return '(';
-
-		case 41:
-			return ')';
-
-		case 42:
-			return '*';
-
-		case 43:
-			return '+';
-
-		case 44:
-			return ',';
-
-		case 45:
-			return '-';
-
-		case 46:
-			return '.';
-
-		case 47:
-			return '/';
-
-		case 48:
-			return '0';
-
-		case 49:
-			return '1';
-
-		case 50:
-			return '2';
-
-		case 51:
-			return '3';
-
-		case 52:
-			return '4';
-
-		case 53:
-			return '5';
-
-		case 54:
-			return '6';
-
-		case 55:
-			return '7';
-
-		case 56:
-			return '8';
-
-		case 57:
-			return '9';
-
-		case 58:
-			return ':';
-
-		case 59:
-			return ';';
-
-		case 60:
-			return '<';
-
-		case 61:
-			return '=';
-
-		case 62:
-			return '>';
-
-		case 63:
-			return '?';
-
-		case 64:
-			return '@';
-
-		case 65:
-			return 'A';
-
-		case 66:
-			return 'B';
-
-		case 67:
-			return 'C';
-
-		case 68:
-			return 'D';
-
-		case 69:
-			return 'E';
-
-		case 70:
-			return 'F';
-
-		case 71:
-			return 'G';
-
-		case 72:
-			return 'H';
-
-		case 73:
-			return 'I';
-
-		case 74:
-			return 'J';
-
-		case 75:
-			return 'K';
-
-		case 76:
-			return 'L';
-
-		case 77:
-			return 'M';
-
-		case 78:
-			return 'N';
-
-		case 79:
-			return 'O';
-
-		case 80:
-			return 'P';
-
-		case 81:
-			return 'Q';
-
-		case 82:
-			return 'R';
-
-		case 83:
-			return 'S';
-
-		case 84:
-			return 'T';
-
-		case 85:
-			return 'U';
-
-		case 86:
-			return 'V';
-
-		case 87:
-			return 'W';
-
-		case 88:
-			return 'X';
-
-		case 89:
-			return 'Y';
-
-		case 90:
-			return 'Z';
-
-		case 91:
-			return '[';
-
-		case 92:
-			return '\\';
-
-		case 93:
-			return ']';
-
-		case 94:
-			return '^';
-
-		case 95:
-			return '_';
-
-		case 96:
-			return '`';
-
-		case 97:
-			return 'a';
-
-		case 98:
-			return 'b';
-
-		case 99:
-			return 'c';
-
-		case 100:
-			return 'd';
-
-		case 101:
-			return 'e';
-
-		case 102:
-			return 'f';
-
-		case 103:
-			return 'g';
-
-		case 104:
-			return 'h';
-
-		case 105:
-			return 'i';
-
-		case 106:
-			return 'j';
-
-		case 107:
-			return 'k';
-
-		case 108:
-			return 'l';
-
-		case 109:
-			return 'm';
-
-		case 110:
-			return 'n';
-
-		case 111:
-			return 'o';
-
-		case 112:
-			return 'p';
-
-		case 113:
-			return 'q';
-
-		case 114:
-			return 'r';
-
-		case 115:
-			return 's';
-
-		case 116:
-			return 't';
-
-		case 117:
-			return 'u';
-
-		case 118:
-			return 'v';
-
-		case 119:
-			return 'w';
-
-		case 120:
-			return 'x';
-
-		case 121:
-			return 'y';
-
-		case 122:
-			return 'z';
-
-		case 123:
-			return '{';
-
-		case 124:
-			return '|';
-
-		case 125:
-			return '}';
-
-		case 126:
-			return '~';
-
-		default:
-			return '.';
-
-	}
-}

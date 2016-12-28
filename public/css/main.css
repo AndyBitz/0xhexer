@@ -7,7 +7,7 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: #EEEEEE;
+  background-color: #fefefe;
   color: #333333;
   overflow: hidden;
   font-family: "Roboto", sans-serif;
@@ -18,8 +18,20 @@ body {
   height: 100%;
   overflow-y: hidden; }
 
+.static-info {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  text-align: right;
+  font-size: .5em; }
+
+@media (min-width: 1200px) {
+  .inline-on-desktop {
+    display: inline; } }
+
 a {
-  text-decoration: none; }
+  text-decoration: none;
+  cursor: pointer; }
   a:active, a:visited, a:hover {
     text-decoration: none; }
 
@@ -28,6 +40,20 @@ a {
   .back-btn:active, .back-btn:visited, .back-btn:hover {
     color: #333333; }
 
+.btn {
+  user-select: none;
+  padding: 4px 12px;
+  margin: 0 5px 0 0;
+  color: #fefefe;
+  background-color: #2196F3;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  white-space: nowrap;
+  display: inline-block; }
+  .btn:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+
 .header {
   background-color: #2196F3;
   height: 80px;
@@ -35,24 +61,27 @@ a {
   justify-content: space-between; }
   .header .headline {
     font-family: "Roboto Mono", monospace;
-    color: #EEEEEE;
+    color: #fefefe;
     height: 100%;
-    display: inline; }
+    display: inline;
+    user-select: none; }
     .header .headline h1 {
       display: inline;
       padding: 0;
       margin: 0 12px;
       height: 100%;
-      line-height: 80px; }
+      line-height: 80px;
+      cursor: default; }
   .header .toggle-settings {
     height: 100%;
     display: inline;
-    margin: 0 12px; }
+    margin: 0 12px;
+    user-select: none; }
     .header .toggle-settings a {
       display: block;
-      color: #EEEEEE; }
+      color: #fefefe; }
       .header .toggle-settings a:hover {
-        color: #EEEEEE; }
+        color: #fefefe; }
     .header .toggle-settings i {
       line-height: 80px;
       font-size: 2em; }
@@ -67,6 +96,31 @@ a {
     height: calc(100% - 90px);
     overflow-y: auto;
     margin-bottom: 100px; }
+    @media (min-width: 1200px) {
+      .pages .page {
+        padding: 12px; } }
+    @media (min-width: 1200px) {
+      .pages .page .page-entry {
+        margin: auto;
+        max-width: 650px; } }
+    .pages .page .page-entry .page-entry-header {
+      width: 100%;
+      height: 40px;
+      background-color: #1E88E5;
+      color: #fefefe; }
+      .pages .page .page-entry .page-entry-header .back-btn {
+        color: inherit;
+        padding: 0 6px 0 12px;
+        user-select: none; }
+        .pages .page .page-entry .page-entry-header .back-btn i {
+          transform: translateY(4px); }
+      .pages .page .page-entry .page-entry-header h3 {
+        display: inline;
+        font-size: 24px;
+        line-height: 40px;
+        font-family: "Roboto Mono", monospace; }
+    .pages .page .page-entry .page-paragraph-end {
+      height: 36px; }
 
 #uploader {
   width: 100%;
@@ -77,7 +131,7 @@ a {
   #uploader i {
     position: absolute;
     font-size: 6em;
-    color: #EEEEEE;
+    color: #fefefe;
     background-color: #2196F3;
     border-radius: 100%;
     padding: 8px;
@@ -125,7 +179,7 @@ a {
   position: fixed;
   bottom: -100%;
   min-height: 60px;
-  color: #EEEEEE;
+  color: #fefefe;
   background-color: #333333;
   margin: 0 12px 12px 12px;
   border-radius: 4px;
@@ -157,6 +211,13 @@ a {
   100% {
     bottom: -100%; } }
 
+#hex-view {
+  padding: 12px 0; }
+
+@media (min-width: 1200px) {
+  .hex-page {
+    margin: 20px; } }
+
 .ascii-field,
 .hex-field {
   width: 25px;
@@ -165,57 +226,46 @@ a {
   border: none;
   text-align: center;
   font-size: 1.1em; }
+  @media (min-width: 1200px) {
+    .ascii-field,
+    .hex-field {
+      font-size: 1.3em;
+      width: 32px;
+      height: 32px; } }
   .ascii-field:focus,
   .hex-field:focus {
     outline: none;
     background-color: #2962FF; }
   .ascii-field.active,
   .hex-field.active {
-    background-color: #2962FF; }
+    background-color: #2962FF;
+    color: #fefefe; }
 
 .hex-row,
 .ascii-row {
   display: inline-block;
   width: 50%; }
+  @media (min-width: 1200px) {
+    .hex-row,
+    .ascii-row {
+      width: auto; } }
 
-.section-button {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  padding: 12px 0 24px 0; }
-  .section-button a {
-    text-align: center;
-    padding: 12px 24px;
-    background-color: #2196F3;
-    border-radius: 4px;
-    width: 182px;
-    display: block;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    color: #EEEEEE;
-    margin: 0 5px;
-    line-height: 19px; }
-    .section-button a.top-button {
-      width: 82px; }
-    .section-button a:hover {
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+@media (min-width: 1200px) {
+  .ascii-row {
+    margin-left: 40px; } }
 
-.section-meta {
-  text-align: center;
-  padding: 12px; }
-  .section-meta a {
-    padding: 4px 12px;
-    margin: 0 5px;
-    color: #EEEEEE;
-    background-color: #2196F3;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-    .section-meta a:hover {
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
-  .section-meta input {
+.section-tools {
+  padding: 12px 0; }
+  .section-tools input {
     border: none;
-    padding: 2px; }
+    padding: 2px;
+    width: 56px; }
+  @media (max-width: 1200px) {
+    .section-tools .inline-on-desktop {
+      margin: 0 0 12px 12px; } }
+
+#toggle-settings {
+  cursor: pointer; }
 
 .settings-menu {
   position: absolute;
@@ -225,12 +275,12 @@ a {
   .settings-menu #settings-menu {
     transform-origin: top right;
     display: none;
-    animation: -show-menu 250ms forwards; }
+    animation: -show-menu 200ms forwards; }
     .settings-menu #settings-menu.show-menu {
       display: block; }
     .settings-menu #settings-menu ul {
       list-style-type: none;
-      background-color: #EEEEEE;
+      background-color: #fefefe;
       padding: 0;
       margin: 0;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -243,7 +293,9 @@ a {
           display: block;
           padding: 8px 24px;
           font-size: 1.2em;
-          color: #333333; }
+          color: #333333;
+          user-select: none;
+          cursor: pointer; }
           .settings-menu #settings-menu ul li a:hover {
             background-color: rgba(0, 0, 0, 0.1); }
 
@@ -252,6 +304,3 @@ a {
     transform: scale(0); }
   100% {
     transform: scale(1); } }
-
-.howto-class {
-  padding: 12px; }

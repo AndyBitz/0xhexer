@@ -43,9 +43,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<div class="settings-menu">
 		<div id="settings-menu">
 			<ul>
-				<li><a href="#" id="savefile">Save File</a></li>
-				<li><a href="https://github.com/andybitz/0xhexer">Project on GitHub</a></li>
-				<li><a href="#" id="howto">How to</a></li>
+				<li><a id="savefile">Save File</a></li>
+				<li><a href="https://github.com/andybitz/0xhexer" target="_blank">Project on GitHub</a></li>
+				<li><a id="howto">How to</a></li>
 				<li><a href="http://andybitz.io" target="_blank">Author</a></li>
 			</ul>
 		</div>
@@ -58,7 +58,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</div>
 
 		<div class="toggle-settings">
-			<a href="#" id="toggle-settings"><i class="material-icons">more_vert</i></a>
+			<a id="toggle-settings"><i class="material-icons">more_vert</i></a>
 		</div>
 
 	</div>
@@ -67,6 +67,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 		<div class="pages">
 
+
+			<!-- PAGE TO UPLOAD FILES -->
 			<div class="page">
 				<div id="uploader">
 					<div class="up-func-cont">
@@ -77,42 +79,85 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</div>
 
+
+			<!-- PAGE FOR HEX-EDITOR -->
 			<div class="page">
 
 				<div id="file-meta">
-					<a href="#" id="download-file" style="display: none;" download>#</a>
 					<!-- TODO -->
 				</div>
 
-				<div class="section-meta">
-					<a href="#" id="skipToSection">Skip To</a><input type="number" id="curSec">/<span id="totalSec"></span>
+				<div class="section-tools">
+					<div class="inline-on-desktop">
+						<a class="btn" data-sec-action="sec-skip">Skip To</a>
+						<input type="number" data-sec-data="sec-cur">/<span data-sec-data="sec-total">000</span>
+					</div>
+					<div class="inline-on-desktop">
+						<a class="btn" data-sec-action="sec-prev">Previous Section</a>
+						<a class="btn" data-sec-action="sec-next">Next Section</a>
+					</div>
 				</div>
 
 				<div id="hex-view">
 					
 				</div>
+
+				<div class="section-tools">
+					<div class="inline-on-desktop">
+						<a class="btn" data-sec-action="sec-skip">Skip To</a>
+						<input type="number" data-sec-data="sec-cur">/<span data-sec-data="sec-total">000</span>
+					</div>
+					<div class="inline-on-desktop">
+						<a class="btn" data-sec-action="sec-prev">Previous Section</a>
+						<a class="btn" data-sec-action="sec-next">Next Section</a>
+					</div>
+				</div>
 			</div>
 
+
+			<!-- HELP PAGE -->
 			<div class="page">
 				
-				<div class="howto-class">
-					<div><a href="#" class="back-btn"><i class="material-icons">arrow_back</i></a></div>
+				<div class="page-entry">
+					<div class="page-entry-header">
+						<a class="back-btn"><i class="material-icons">arrow_back</i></a>
+						<h3>How to</h3>
+					</div>
+					
 					<h2>What is it?</h2>
 					<p>0xHEXER is a javascript based Hex-Editor that should work with every browser that supports ECMAScript 6.</p>
 					<p>For now only the core functionality is working. This means you can load a file, edit its bytes with Hex-Values or ASCII-Chracters and save it.</p>
 					<p>But be carful! At this point you cannot undo changes or return back after your browser crashes. Everything is Client-Sided.</p>
+					<div class="page-paragraph-end"></div>
+
+					<h2>How to use it?</h2>
+					<p>Just load a file by clicking the big blue upload button on the front page. Alternatively you can drag and drop it somewhere on the front page.</p>
+					<p>After that you can edit the bytes of the file by changing the value of the Hex-Input or ASCII-Input fields.</p>
+					<p>When you are finished with editing click the settings button on the top-right corner and choose "Save File". The changed file should now saved - just like a file you download.</p>
+					<div class="page-paragraph-end"></div>
+
 				</div>
 
 			</div>
 
+
 		</div>
 
+	</div>
+
+	<div class="static-info">
+		v 0.1.0<br>
+		&copy; Andy Bitz 2016
 	</div>
 
 	<div class="toast-positioner">
 		<div id="toast">
 			<p id="toast-text"></p>
 		</div>
+	</div>
+
+	<div style="display: none;">
+		<a id="download-file" download></a>
 	</div>
 
 	<script type="text/javascript" src="/js/script.js?v=0"></script>

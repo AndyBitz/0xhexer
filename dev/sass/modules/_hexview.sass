@@ -1,3 +1,10 @@
+#hex-view
+	padding: 12px 0;
+
+.hex-page
+	@media #{$mq-desktop}
+		margin: 20px;
+
 .ascii-field,
 .hex-field
 	width: 25px;
@@ -7,12 +14,18 @@
 	text-align: center;
 	font-size: 1.1em;
 
+	@media #{$mq-desktop}
+		font-size: 1.3em;
+		width: 32px;
+		height: 32px;
+
 	&:focus
 		outline: none;
 		background-color: $col-active;
 
 	&.active
 		background-color: $col-active;
+		color: $col-inv;
 
 
 .hex-row,
@@ -20,48 +33,21 @@
 	display: inline-block;
 	width: 50%;
 
-.section-button
-	display: flex;
-	justify-content: center;
-	align-content: center;
-	padding: 12px 0 24px 0;
+	@media #{$mq-desktop}
+		width: auto;
 
-	a
-		text-align: center;
-		padding: 12px 24px;
-		background-color: $col-prime
-		border-radius: 4px;
-		width: 182px;
-		display: block;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-		transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-		color: $col-inv;
-		margin: 0 5px;
-		line-height: 19px;
+.ascii-row
+	@media #{$mq-desktop}
+		margin-left: 40px;
 
-		&.top-button
-			width: 82px;
-
-		&:hover
-			box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-
-
-.section-meta
-	text-align: center;
-	padding: 12px;
-
-	a
-		padding: 4px 12px;
-		margin: 0 5px;
-		color: $col-inv;
-		background-color: $col-prime;
-		border-radius: 4px;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-		transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-
-		&:hover
-			box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+.section-tools
+	padding: 12px 0;
 
 	input
 		border: none;
 		padding: 2px;
+		width: 56px;
+
+	.inline-on-desktop
+		@media #{$mq-desktop-before}
+			margin: 0 0 12px 12px;

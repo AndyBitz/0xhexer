@@ -9,6 +9,8 @@ Uses gulp-sass and gulp-concat for development.
 
 
 ####TODOs
+* make one .section-tool fixed on desktop
+* add up/down buttons to .section-tool
 * get rid of globals
 * get rid of inline-js
 * implement search function

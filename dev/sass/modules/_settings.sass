@@ -1,3 +1,6 @@
+#toggle-settings
+	cursor: pointer;
+
 .settings-menu
 	position: absolute;
 	right: 12px;
@@ -8,7 +11,7 @@
 
 		transform-origin: top right;
 		display: none;
-		animation: -show-menu 250ms forwards;
+		animation: -show-menu 200ms forwards;
 
 		&.show-menu
 			display: block;
@@ -31,6 +34,8 @@
 					padding: 8px 24px;
 					font-size: 1.2em;
 					color: $col-font;
+					user-select: none;
+					cursor: pointer;
 
 					&:hover
 						background-color: $col-hover;
