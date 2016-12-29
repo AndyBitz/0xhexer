@@ -45,7 +45,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			<ul>
 				<li><a id="savefile">Save File</a></li>
 				<li><a href="https://github.com/andybitz/0xhexer" target="_blank">Project on GitHub</a></li>
-				<li><a id="howto">How to</a></li>
+				<li><a data-page-url="how-to">How to</a></li>
 				<li><a href="http://andybitz.io" target="_blank">Author</a></li>
 			</ul>
 		</div>
@@ -69,7 +69,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 			<!-- PAGE TO UPLOAD FILES -->
-			<div class="page">
+			<div class="page" data-page-id="load">
 				<div id="uploader">
 					<div class="up-func-cont">
 						<input id="fileoc" type="file" style="display: none">
@@ -81,7 +81,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 			<!-- PAGE FOR HEX-EDITOR -->
-			<div class="page">
+			<div class="page" data-page-id="hex-view">
 
 				<div id="file-meta">
 					<!-- TODO -->
@@ -116,7 +116,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 			<!-- HELP PAGE -->
-			<div class="page">
+			<div class="page" data-page-id="how-to">
 				
 				<div class="page-entry">
 					<div class="page-entry-header">
@@ -134,6 +134,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					<p>Just load a file by clicking the big blue upload button on the front page. Alternatively you can drag and drop it somewhere on the front page.</p>
 					<p>After that you can edit the bytes of the file by changing the value of the Hex-Input or ASCII-Input fields.</p>
 					<p>When you are finished with editing click the settings button on the top-right corner and choose "Save File". The changed file should now saved - just like a file you download.</p>
+					<div class="page-paragraph-end"></div>
+
+				</div>
+
+			</div>
+
+
+			<!-- CONFIG PAGE -->
+			<div class="page" data-page-id="config">
+				
+				<div class="page-entry">
+					<div class="page-entry-header">
+						<a class="back-btn"><i class="material-icons">arrow_back</i></a>
+						<h3>Config</h3>
+					</div>
+
+					<h2>Configuration</h2>
+					<p>Changes will be saved as cookies.</p>
 					<div class="page-paragraph-end"></div>
 
 				</div>

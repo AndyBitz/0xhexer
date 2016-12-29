@@ -83,10 +83,12 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.totalRows = this.file.size/8;					// define total rows
-	this.totalSections = Math.floor(this.totalRows/128);	// define total Sections; one section has 128 rows
+	this.pageRows = 128;				// define rows of one section
+	this.bytesPerRow = 10;				// define bytes that are shown per row
+	this.currentSection = 0;			// init current Section
 
-	this.currentSection = 0;	// init current Section
+	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
+	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-total"]'),
@@ -108,6 +110,15 @@ hexer.prototype.createHexPage = function() {
 				this.currentSection = e.target.value;
 				this.loadSection();
 			}
+		}
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'click',
+		(e)=>{
+			this.currentSection = e.target.value;
+			this.loadSection();
 		}
 		);
 
@@ -140,7 +151,7 @@ hexer.prototype.createHexPage = function() {
 
 	this.loadSection();
 
-	p.next();
+	p.loadPageById('hex-view');
 };
 
 
@@ -150,8 +161,8 @@ hexer.prototype.loadSection = function() {
 		this.currentSection = 0;
 
 	let output = '';
-	let row_counter = 0 + (this.currentSection*128);
-	let c = 0 + (this.currentSection*128*8);
+	let row_counter = 0 + (this.currentSection*this.pageRows);
+	let c = 0 + (this.currentSection*this.pageRows*this.bytesPerRow);
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-cur"]'),
@@ -159,18 +170,21 @@ hexer.prototype.loadSection = function() {
 		this.currentSection
 		);
 
+	let end_page = false;
 	// generate section
-	for (let i=0; i < 128; i++) {
+	for (let i=0; i < this.pageRows; i++) {
 
 		output += `<div data-row-nr="${row_counter++}">`; // start row
 		let hex_row = '';
 		let ascii_row = '';
 
 		// generate both rows
-		for (let j=0; j < 8; j++) {
+		for (let j=0; j < this.bytesPerRow; j++) {
 
-			if (this.buffer[c] == undefined)
+			if (this.buffer[c] == undefined) {
+				end_page = true;
 				break;
+			}
 
 			hex_row		+= `<input maxlength="2" class="hex-field" data-slice="${c}" value="${this.buffer[c].toString(16)}">`;
 			ascii_row	+= `<input maxlength="1" class="ascii-field" data-slice="${c}" value="${toAscii(this.buffer[c])}">`;
@@ -182,6 +196,8 @@ hexer.prototype.loadSection = function() {
 
 		output += `</div>`;	// end row
 
+		if (end_page)
+			break;
 	}
 
 	this.hexPage.innerHTML = output;
@@ -202,7 +218,7 @@ hexer.prototype.toBottom = function() {
 hexer.prototype.nextSection = function() {
 	this.currentSection++;
 	if (this.currentSection > this.totalSections)
-		this.currentSection = this.totalSection;
+		this.currentSection = this.totalSections;
 
 	this.loadSection();
 };

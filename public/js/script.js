@@ -406,10 +406,12 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.totalRows = this.file.size/8;					// define total rows
-	this.totalSections = Math.floor(this.totalRows/128);	// define total Sections; one section has 128 rows
+	this.pageRows = 128;				// define rows of one section
+	this.bytesPerRow = 10;				// define bytes that are shown per row
+	this.currentSection = 0;			// init current Section
 
-	this.currentSection = 0;	// init current Section
+	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
+	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-total"]'),
@@ -431,6 +433,15 @@ hexer.prototype.createHexPage = function() {
 				this.currentSection = e.target.value;
 				this.loadSection();
 			}
+		}
+		);
+
+	addEventToArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'click',
+		(e)=>{
+			this.currentSection = e.target.value;
+			this.loadSection();
 		}
 		);
 
@@ -463,7 +474,7 @@ hexer.prototype.createHexPage = function() {
 
 	this.loadSection();
 
-	p.next();
+	p.loadPageById('hex-view');
 };
 
 
@@ -473,8 +484,8 @@ hexer.prototype.loadSection = function() {
 		this.currentSection = 0;
 
 	let output = '';
-	let row_counter = 0 + (this.currentSection*128);
-	let c = 0 + (this.currentSection*128*8);
+	let row_counter = 0 + (this.currentSection*this.pageRows);
+	let c = 0 + (this.currentSection*this.pageRows*this.bytesPerRow);
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-cur"]'),
@@ -482,18 +493,21 @@ hexer.prototype.loadSection = function() {
 		this.currentSection
 		);
 
+	let end_page = false;
 	// generate section
-	for (let i=0; i < 128; i++) {
+	for (let i=0; i < this.pageRows; i++) {
 
 		output += `<div data-row-nr="${row_counter++}">`; // start row
 		let hex_row = '';
 		let ascii_row = '';
 
 		// generate both rows
-		for (let j=0; j < 8; j++) {
+		for (let j=0; j < this.bytesPerRow; j++) {
 
-			if (this.buffer[c] == undefined)
+			if (this.buffer[c] == undefined) {
+				end_page = true;
 				break;
+			}
 
 			hex_row		+= `<input maxlength="2" class="hex-field" data-slice="${c}" value="${this.buffer[c].toString(16)}">`;
 			ascii_row	+= `<input maxlength="1" class="ascii-field" data-slice="${c}" value="${toAscii(this.buffer[c])}">`;
@@ -505,6 +519,8 @@ hexer.prototype.loadSection = function() {
 
 		output += `</div>`;	// end row
 
+		if (end_page)
+			break;
 	}
 
 	this.hexPage.innerHTML = output;
@@ -525,7 +541,7 @@ hexer.prototype.toBottom = function() {
 hexer.prototype.nextSection = function() {
 	this.currentSection++;
 	if (this.currentSection > this.totalSections)
-		this.currentSection = this.totalSection;
+		this.currentSection = this.totalSections;
 
 	this.loadSection();
 };
@@ -625,115 +641,130 @@ hexer.prototype.saveFile = function() {
 
 };
 function pages() {
-	this.all = document.querySelectorAll('.pages .page');
-	this.currentPage = 0;
+
+	this.pages = document.querySelectorAll('.pages .page[data-page-id]');
+	this.defaultPage = this.pages[0].getAttribute('data-page-id');
+	this.currentPage = this.defaultPage;
 	this.previousPage = this.currentPage;
-
-	for (var i=0; i < this.all.length; i++) {
-		this.all[i].setAttribute('data-page-index', i);
-		this.all[i].style.display = 'none';
-	}
-
-	this.all[this.currentPage].style.display = 'block';
+	this.loadPage();
 	this.initBackButtons();
+	this.initURLs();
+
 }
 
 
-pages.prototype.initBackButtons = function() {
+pages.prototype.initURLs = function() {
 
-	let backbtns = document.getElementsByClassName('back-btn');
-	for (let i=0; i < backbtns.length; i++) {
-		backbtns[i].addEventListener('click', (e)=>{
-			this.goBack();
+	let elem = document.querySelectorAll('[data-page-url]');
+	for (let i=0; i < elem.length; i++) {
+
+		let pageId = elem[i].getAttribute('data-page-url');
+
+		elem[i].addEventListener('click', (e)=>{
+			this.previousPage = this.currentPage;
+			this.currentPage = pageId;
+			this.loadPage();
 		});
 	}
 
 };
 
 
-pages.prototype.next = function() {
+pages.prototype.initBackButtons = function() {
 
-	this.previousPage = this.currentPage;
-	this.currentPage++;
+	addEventToArray(
+		document.getElementsByClassName('back-btn'),
+		'click',
+		this.goBack.bind(this)
+		);
 
-	this.loadPage();
-
-};
-
-
-pages.prototype.previous = function() {
-
-	this.previousPage = this.currentPage;
-	this.currentPage--;
-
-	this.loadPage();
-};
-
-
-pages.prototype.loadById = function(val) {
-
-	this.previousPage = this.currentPage;
-	this.currentPage = val;
-
-	this.loadPage();
 };
 
 
 pages.prototype.goBack = function() {
 
 	if (this.currentPage == this.previousPage)
-		this.currentPage = 0;
+		this.currentPage = this.defaultPage;
 	else
 		this.currentPage = this.previousPage;
+
 	this.loadPage();
 
 };
 
 
-pages.prototype.loadPage = function() {
+pages.prototype.loadPageById = function(sp) {
 
-	for (let i=0; i < this.all.length; i++) {
-		this.all[i].style.display = 'none';
+	let p = document.querySelector(`[data-page-id="${sp}"]`);
+	if (p == undefined) {
+		console.error("Pages does not exist!");
+	} else {
+		this.previousPage = this.currentPage;
+		this.currentPage = sp;
+		this.loadPage();
 	}
-	
-	if (this.currentPage < 0)
-		this.currentPage = 0;
-	else if (this.currentPage > this.all.length-1)
-		this.currentPage = this.all.length-1;
-
-	this.all[this.currentPage].style.display = 'block';
 
 };
+
+
+pages.prototype.loadPage = function() {
+	this.hideAllPages();
+	this.showCurrentPage();
+};
+
+
+	/* showCurrentPage() and hideAllPages()
+ 	 * should only be called by loadPage()
+ 	 */
+	pages.prototype.showCurrentPage = function() {
+		document
+			.querySelector(`[data-page-id="${this.currentPage}"]`)
+			.style.display = 'block';
+	};
+
+
+	pages.prototype.hideAllPages = function() {
+		for (var i=0; i < this.pages.length; i++) {
+			this.pages[i].style.display = 'none';
+		}
+	};
 function settings() {
+
 	this.currentStatus = 'CLOSE';
-	document.getElementById('toggle-settings').addEventListener('click', this.toggle);
-	document.getElementById('howto').addEventListener('click', this.howto);
+	document.getElementById('toggle-settings').addEventListener('click', this.toggle.bind(this));
 
-	// let back = document.getElementsByClassName('back-btn');
+	addEventToArray(
+		document.querySelectorAll('#settings-menu li a'),
+		'click',
+		this.closeMenu.bind(this)
+		);
 
-	// for (let i=0; i < back.length; i++) {
-	// 	back[i].addEventListener('click', p.goBack);
-	// }
 }
+
+
+settings.prototype.closeMenu = function() {
+
+	this.currentStatus = 'CLOSE';
+	document.getElementById('settings-menu').className = '';
+
+};
+
+
+settings.prototype.openMenu = function() {
+
+	this.currentStatus = 'OPEN';
+	document.getElementById('settings-menu').className = 'show-menu';
+
+};
 
 
 settings.prototype.toggle = function() {
 
 	if (this.currentStatus == 'OPEN') {
-		this.currentStatus = 'CLOSE';
-		document.getElementById('settings-menu').className = '';
+		this.closeMenu();
 	} else {
-		this.currentStatus = 'OPEN';
-		document.getElementById('settings-menu').className = 'show-menu';
+		this.openMenu();
 	}
-
-};
-
-
-settings.prototype.howto = function() {
-
-	p.loadById(2);
-	document.getElementById('toggle-settings').click();
 
 };
 var toastt = {

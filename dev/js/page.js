@@ -1,80 +1,88 @@
 function pages() {
-	this.all = document.querySelectorAll('.pages .page');
-	this.currentPage = 0;
+
+	this.pages = document.querySelectorAll('.pages .page[data-page-id]');
+	this.defaultPage = this.pages[0].getAttribute('data-page-id');
+	this.currentPage = this.defaultPage;
 	this.previousPage = this.currentPage;
-
-	for (var i=0; i < this.all.length; i++) {
-		this.all[i].setAttribute('data-page-index', i);
-		this.all[i].style.display = 'none';
-	}
-
-	this.all[this.currentPage].style.display = 'block';
+	this.loadPage();
 	this.initBackButtons();
+	this.initURLs();
+
 }
 
 
-pages.prototype.initBackButtons = function() {
+pages.prototype.initURLs = function() {
 
-	let backbtns = document.getElementsByClassName('back-btn');
-	for (let i=0; i < backbtns.length; i++) {
-		backbtns[i].addEventListener('click', (e)=>{
-			this.goBack();
+	let elem = document.querySelectorAll('[data-page-url]');
+	for (let i=0; i < elem.length; i++) {
+
+		let pageId = elem[i].getAttribute('data-page-url');
+
+		elem[i].addEventListener('click', (e)=>{
+			this.previousPage = this.currentPage;
+			this.currentPage = pageId;
+			this.loadPage();
 		});
 	}
 
 };
 
 
-pages.prototype.next = function() {
+pages.prototype.initBackButtons = function() {
 
-	this.previousPage = this.currentPage;
-	this.currentPage++;
+	addEventToArray(
+		document.getElementsByClassName('back-btn'),
+		'click',
+		this.goBack.bind(this)
+		);
 
-	this.loadPage();
-
-};
-
-
-pages.prototype.previous = function() {
-
-	this.previousPage = this.currentPage;
-	this.currentPage--;
-
-	this.loadPage();
-};
-
-
-pages.prototype.loadById = function(val) {
-
-	this.previousPage = this.currentPage;
-	this.currentPage = val;
-
-	this.loadPage();
 };
 
 
 pages.prototype.goBack = function() {
 
 	if (this.currentPage == this.previousPage)
-		this.currentPage = 0;
+		this.currentPage = this.defaultPage;
 	else
 		this.currentPage = this.previousPage;
+
 	this.loadPage();
 
 };
 
 
-pages.prototype.loadPage = function() {
+pages.prototype.loadPageById = function(sp) {
 
-	for (let i=0; i < this.all.length; i++) {
-		this.all[i].style.display = 'none';
+	let p = document.querySelector(`[data-page-id="${sp}"]`);
+	if (p == undefined) {
+		console.error("Pages does not exist!");
+	} else {
+		this.previousPage = this.currentPage;
+		this.currentPage = sp;
+		this.loadPage();
 	}
-	
-	if (this.currentPage < 0)
-		this.currentPage = 0;
-	else if (this.currentPage > this.all.length-1)
-		this.currentPage = this.all.length-1;
-
-	this.all[this.currentPage].style.display = 'block';
 
 };
+
+
+pages.prototype.loadPage = function() {
+	this.hideAllPages();
+	this.showCurrentPage();
+};
+
+
+	/* showCurrentPage() and hideAllPages()
+ 	 * should only be called by loadPage()
+ 	 */
+	pages.prototype.showCurrentPage = function() {
+		document
+			.querySelector(`[data-page-id="${this.currentPage}"]`)
+			.style.display = 'block';
+	};
+
+
+	pages.prototype.hideAllPages = function() {
+		for (var i=0; i < this.pages.length; i++) {
+			this.pages[i].style.display = 'none';
+		}
+	};

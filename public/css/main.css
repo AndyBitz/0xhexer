@@ -260,7 +260,7 @@ a {
     border: none;
     padding: 2px;
     width: 56px; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .section-tools .inline-on-desktop {
       margin: 0 0 12px 12px; } }
 
