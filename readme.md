@@ -9,7 +9,7 @@ Uses gulp-sass and gulp-concat for development.
 
 
 ####TODOs
-* add config class for users
+* save changed configurations as cookies
 * add up/down buttons to .section-tool
 * get rid of globals
 * get rid of inline-js
