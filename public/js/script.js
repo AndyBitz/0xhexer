@@ -1,3 +1,52 @@
+function config() {
+
+	this.numberOfBytesPerRow = 8;
+	this.numberOfRowsPerPage = 128;
+
+	this.initConfigPage();
+
+}
+
+
+config.prototype.initConfigPage = function() {
+
+	this.applyButton = document.getElementById('applyChanges');
+	this.numberOfBytesPerRowInput = document.getElementById('numberOfBytesPerRow');
+	this.numberOfRowsPerPageInput = document.getElementById('numberOfRowsPerPage');
+
+	this.updateForm();
+
+	this.applyButton.addEventListener('click', this.applyChanges.bind(this));
+
+};
+
+
+config.prototype.applyChanges = function() {
+
+	this.saveChanges();
+
+	if (h.buffer != undefined)
+		h.createHexPage();
+
+	this.updateForm();
+
+};
+
+
+config.prototype.saveChanges = function() {
+
+	this.numberOfBytesPerRow = this.numberOfBytesPerRowInput.value;
+	this.numberOfRowsPerPage = this.numberOfRowsPerPageInput.value;
+
+};
+
+
+config.prototype.updateForm = function() {
+
+	this.numberOfBytesPerRowInput.value = this.numberOfBytesPerRow;
+	this.numberOfRowsPerPageInput.value = this.numberOfRowsPerPage;
+
+};
 /* Loops through array of DOM-Elements and adds a event to every one of them.
  * Don't use this on too much elements.
  * Use window.addEventListener() instead.
@@ -406,9 +455,9 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.pageRows = 128;				// define rows of one section
-	this.bytesPerRow = 10;				// define bytes that are shown per row
-	this.currentSection = 0;			// init current Section
+	this.pageRows = c.numberOfRowsPerPage;		// define rows of one section
+	this.bytesPerRow = c.numberOfBytesPerRow;	// define bytes that are shown per row
+	this.currentSection = 0;					// init current Section
 
 	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
 	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
@@ -433,15 +482,6 @@ hexer.prototype.createHexPage = function() {
 				this.currentSection = e.target.value;
 				this.loadSection();
 			}
-		}
-		);
-
-	addEventToArray(
-		document.querySelectorAll('[data-sec-data="sec-cur"]'),
-		'click',
-		(e)=>{
-			this.currentSection = e.target.value;
-			this.loadSection();
 		}
 		);
 
@@ -473,8 +513,17 @@ hexer.prototype.createHexPage = function() {
 		);
 
 	this.loadSection();
-
 	p.loadPageById('hex-view');
+
+	/* STYLE */
+	let placeSectionTools = ()=>{
+		if (mq.desktop) {
+			document.getElementById('sec-tools-desktop').style.left = (this.hexPage.offsetWidth + 12) + "px"; // +12 because of padding
+		}
+	};
+	placeSectionTools();
+	window.addEventListener('resize', placeSectionTools.bind(this));
+	/* STYLE */
 };
 
 
@@ -614,8 +663,8 @@ hexer.prototype.init_workspace = function() {
 	};
 
 
-	document.getElementById('hex-view').addEventListener('keyup', kHandler);
-	document.getElementById('hex-view').addEventListener('click', cHandler);
+	this.hexPage.addEventListener('keyup', kHandler);
+	this.hexPage.addEventListener('click', cHandler);
 
 };
 
@@ -767,6 +816,7 @@ settings.prototype.toggle = function() {
 	}
 
 };
+
 var toastt = {
 	LONG: 6000,
 	SHORT: 3200
@@ -802,7 +852,7 @@ toast.prototype.newToast = function(text, length) {
 	}
 
 };
-var g, h, t, p, s;
+var g, h, t, p, s, c;
 
 var mq = {
 	desktop: window.matchMedia("(min-width: 1200px)").matches
@@ -820,6 +870,7 @@ window.addEventListener('click', (e)=>{
 
 !function init() {
 
+	c = new config();
 	s = new settings();
 	p = new pages();
 	t = new toast();

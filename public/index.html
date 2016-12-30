@@ -44,8 +44,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<div id="settings-menu">
 			<ul>
 				<li><a id="savefile">Save File</a></li>
-				<li><a href="https://github.com/andybitz/0xhexer" target="_blank">Project on GitHub</a></li>
+				<li><a data-page-url="load">Load new file</a></li>
+				<li class="list-separator"></li>
 				<li><a data-page-url="how-to">How to</a></li>
+				<li><a data-page-url="config">Config</a></li>
+				<li class="list-separator"></li>
+				<li><a href="https://github.com/andybitz/0xhexer" target="_blank">Project on GitHub</a></li>
 				<li><a href="http://andybitz.io" target="_blank">Author</a></li>
 			</ul>
 		</div>
@@ -87,7 +91,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					<!-- TODO -->
 				</div>
 
-				<div class="section-tools">
+				<div class="section-tools hide-on-desktop">
 					<div class="inline-on-desktop">
 						<a class="btn" data-sec-action="sec-skip">Skip To</a>
 						<input type="number" data-sec-data="sec-cur">/<span data-sec-data="sec-total">000</span>
@@ -102,7 +106,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					
 				</div>
 
-				<div class="section-tools">
+				<div id="sec-tools-desktop" class="section-tools">
 					<div class="inline-on-desktop">
 						<a class="btn" data-sec-action="sec-skip">Skip To</a>
 						<input type="number" data-sec-data="sec-cur">/<span data-sec-data="sec-total">000</span>
@@ -151,8 +155,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					</div>
 
 					<h2>Configuration</h2>
-					<p>Changes will be saved as cookies.</p>
+					<p>Changes will not be saved for now.</p>
 					<div class="page-paragraph-end"></div>
+
+					<p class="page-entry-form-label">
+						<a class="btn" id="applyChanges">Apply Changes</a>
+					</p>
+
+					<p class="page-entry-form-label">
+						<label>Number of Bytes per Row</label>
+						<input type="number" id="numberOfBytesPerRow">
+					</p>
+
+					<p class="page-entry-form-label">
+						<label>Number of Rows per Page</label>
+						<input type="number" id="numberOfRowsPerPage">
+					</p>
 
 				</div>
 

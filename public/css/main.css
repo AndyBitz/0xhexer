@@ -121,6 +121,25 @@ a {
         font-family: "Roboto Mono", monospace; }
     .pages .page .page-entry .page-paragraph-end {
       height: 36px; }
+    .pages .page .page-entry .page-entry-form-label label {
+      display: block;
+      margin-top: 24px;
+      margin-bottom: 3px;
+      color: #757575; }
+    .pages .page .page-entry .page-entry-form-label input {
+      padding: 3px;
+      border-radius: 0;
+      width: 256px;
+      font-size: 1.2em;
+      border: none;
+      border-bottom: 2px solid #448AFF;
+      background-color: transparent;
+      color: #757575;
+      translate: all 200ms ease-out; }
+      .pages .page .page-entry .page-entry-form-label input:focus {
+        outline: none;
+        color: #333333;
+        border-bottom-color: #2962FF; }
 
 #uploader {
   width: 100%;
@@ -213,6 +232,9 @@ a {
 
 #hex-view {
   padding: 12px 0; }
+  @media (min-width: 1200px) {
+    #hex-view {
+      display: inline-block; } }
 
 @media (min-width: 1200px) {
   .hex-page {
@@ -256,6 +278,11 @@ a {
 
 .section-tools {
   padding: 12px 0; }
+  @media (min-width: 1200px) {
+    .section-tools {
+      display: inline-block;
+      position: fixed;
+      padding: 12px; } }
   .section-tools input {
     border: none;
     padding: 2px;
@@ -289,6 +316,9 @@ a {
         padding: 0;
         margin: 0;
         display: block; }
+        .settings-menu #settings-menu ul li.list-separator {
+          height: 2px;
+          background-color: #333333; }
         .settings-menu #settings-menu ul li a {
           display: block;
           padding: 8px 24px;
@@ -304,3 +334,7 @@ a {
     transform: scale(0); }
   100% {
     transform: scale(1); } }
+
+@media (min-width: 1200px) {
+  .hide-on-desktop {
+    display: none; } }

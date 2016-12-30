@@ -83,9 +83,9 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.pageRows = 128;				// define rows of one section
-	this.bytesPerRow = 10;				// define bytes that are shown per row
-	this.currentSection = 0;			// init current Section
+	this.pageRows = c.numberOfRowsPerPage;		// define rows of one section
+	this.bytesPerRow = c.numberOfBytesPerRow;	// define bytes that are shown per row
+	this.currentSection = 0;					// init current Section
 
 	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
 	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
@@ -110,15 +110,6 @@ hexer.prototype.createHexPage = function() {
 				this.currentSection = e.target.value;
 				this.loadSection();
 			}
-		}
-		);
-
-	addEventToArray(
-		document.querySelectorAll('[data-sec-data="sec-cur"]'),
-		'click',
-		(e)=>{
-			this.currentSection = e.target.value;
-			this.loadSection();
 		}
 		);
 
@@ -150,8 +141,17 @@ hexer.prototype.createHexPage = function() {
 		);
 
 	this.loadSection();
-
 	p.loadPageById('hex-view');
+
+	/* STYLE */
+	let placeSectionTools = ()=>{
+		if (mq.desktop) {
+			document.getElementById('sec-tools-desktop').style.left = (this.hexPage.offsetWidth + 12) + "px"; // +12 because of padding
+		}
+	};
+	placeSectionTools();
+	window.addEventListener('resize', placeSectionTools.bind(this));
+	/* STYLE */
 };
 
 
@@ -291,8 +291,8 @@ hexer.prototype.init_workspace = function() {
 	};
 
 
-	document.getElementById('hex-view').addEventListener('keyup', kHandler);
-	document.getElementById('hex-view').addEventListener('click', cHandler);
+	this.hexPage.addEventListener('keyup', kHandler);
+	this.hexPage.addEventListener('click', cHandler);
 
 };
 
