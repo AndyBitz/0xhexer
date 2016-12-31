@@ -9,11 +9,10 @@ Uses gulp-sass and gulp-concat for development.
 
 
 ####TODOs
-* save changed configurations as cookies
 * add up/down buttons to .section-tool
 * get rid of globals
 * get rid of inline-js
 * implement search function
-* URL handling
+* HTML5 History API forward fix
 * History and Backup functions with local Storage
 * improve interface functionality

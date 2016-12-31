@@ -734,22 +734,28 @@ hexer.prototype.saveFile = function() {
 };
 function pages() {
 
-	this.pages = document.querySelectorAll('.pages .page[data-page-id]');
-	this.defaultPage = this.pages[0].getAttribute('data-page-id');
-	this.previousPage = this.defaultPage;
+	// variables
+	this.pages			= document.querySelectorAll('.pages .page[data-page-id]');
+	this.defaultPage	= this.pages[0].getAttribute('data-page-id');
+	this.currentPage	= this.defaultPage;
 
+	this.previousPage	= [];
+
+	// inits
 	this.initBackButtons();
 	this.initURLs();
 
-	if (window.location.pathname != '') {
+	// 
+	if (window.location.pathname != '/') {
 		this.loadPageById(window.location.pathname.replace('/', ''));
 	} else {
 		this.loadPageById(this.defaultPage);
 	}
 
+	// events
 	window.addEventListener('popstate', (e)=>{
-		console.log(e.state);
-		this.loadPageById(e.state.previousPageId);
+		e.preventDefault();
+		this.loadPreviousPage(this.previousPage.pop() || this.defaultPage);
 	});
 
 }
@@ -763,9 +769,7 @@ pages.prototype.initURLs = function() {
 		let pageId = elem[i].getAttribute('data-page-url');
 
 		elem[i].addEventListener('click', (e)=>{
-			this.previousPage = this.currentPage;
-			this.currentPage = pageId;
-			this.loadPage();
+			this.loadPageById(pageId);
 		});
 	}
 
@@ -781,14 +785,30 @@ pages.prototype.initBackButtons = function() {
 };
 
 
-pages.prototype.loadPageById = function(sp) {
-
+pages.prototype.loadPreviousPage = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
-		console.error("Pages does not exist!");
+		console.error("Back: Page does not exist!");
+		t.newToast("Back: Page does not exist!", toastt.SHORT);
+	} else {
+		this.currentPage = sp;
+
+		history.replaceState(null, '', sp);
+
+		this.hideAllPages();
+		this.showCurrentPage();
+	}
+
+};
+
+
+pages.prototype.loadPageById = function(sp) {
+	let p = document.querySelector(`[data-page-id="${sp}"]`);
+	if (p == undefined) {
+		console.error("Page does not exist!");
 		t.newToast("Page does not exist!", toastt.SHORT);
 	} else {
-		this.previousPage = this.currentPage;
+		this.previousPage.push(this.currentPage);
 		this.currentPage = sp;
 		this.loadPage();
 	}
@@ -797,26 +817,23 @@ pages.prototype.loadPageById = function(sp) {
 
 
 pages.prototype.loadPage = function() {
-	history.pushState({previousPageId: this.previousPage}, '', this.currentPage);
+	history.pushState(null, '', this.currentPage);
 	this.hideAllPages();
 	this.showCurrentPage();
 };
-
-
-	/* showCurrentPage() and hideAllPages()
- 	 * should only be called by loadPage()
- 	 */
-	pages.prototype.showCurrentPage = function() {
-		document
-			.querySelector(`[data-page-id="${this.currentPage}"]`)
-			.style.display = 'block';
-	};
 
 
 	pages.prototype.hideAllPages = function() {
 		for (var i=0; i < this.pages.length; i++) {
 			this.pages[i].style.display = 'none';
 		}
+	};
+
+
+	pages.prototype.showCurrentPage = function() {
+		document
+			.querySelector(`[data-page-id="${this.currentPage}"]`)
+			.style.display = 'block';
 	};
 function settings() {
 
