@@ -11,7 +11,7 @@ hexer.prototype.init_u_area = function() {
 	this.uareaicon = document.querySelector('#uploader i');
 	this.inputfield = document.getElementById('fileoc');
 
-	/* Click handling
+	/* Click handling.
 	 *
 	 */
 	this.uareaicon.addEventListener('click', (e)=>{
@@ -83,12 +83,12 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.pageRows = c.numberOfRowsPerPage;		// define rows of one section
-	this.bytesPerRow = c.numberOfBytesPerRow;	// define bytes that are shown per row
-	this.currentSection = 0;					// init current Section
+	this.bytesPerRow	= c.options[0].value;	// define bytes that are shown per row
+	this.pageRows 		= c.options[1].value;	// define rows of one section
+	this.currentSection	= 0;					// init current Section
 
-	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
-	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
+	this.totalRows		= this.file.size/this.bytesPerRow;				// define total rows
+	this.totalSections	= Math.floor(this.totalRows/this.pageRows);		// define total Sections;
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-total"]'),

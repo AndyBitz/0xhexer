@@ -1,7 +1,19 @@
 function config() {
 
-	this.numberOfBytesPerRow = 8;
-	this.numberOfRowsPerPage = 128;
+	this.options = [
+		{
+			name: 'numberOfBytesPerRow',
+			input: document.getElementById('numberOfBytesPerRow'),
+			value: parseInt(getCookie('numberOfBytesPerRow')) || 8,
+			default: 8
+		},
+		{
+			name: 'numberOfRowsPerPage',
+			input: document.getElementById('numberOfRowsPerPage'),
+			value: parseInt(getCookie('numberOfRowsPerPage')) || 128,
+			default: 128
+		}
+	];
 
 	this.initConfigPage();
 
@@ -10,40 +22,48 @@ function config() {
 
 config.prototype.initConfigPage = function() {
 
-	this.applyButton = document.getElementById('applyChanges');
-	this.numberOfBytesPerRowInput = document.getElementById('numberOfBytesPerRow');
-	this.numberOfRowsPerPageInput = document.getElementById('numberOfRowsPerPage');
-
 	this.updateForm();
 
-	this.applyButton.addEventListener('click', this.applyChanges.bind(this));
+	document.getElementById('applyChanges')
+		.addEventListener('click', this.applyChanges.bind(this));
+
+	document.getElementById('resetConfig')
+		.addEventListener('click', this.resetConfig.bind(this));
 
 };
 
 
 config.prototype.applyChanges = function() {
 
-	this.saveChanges();
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].value = this.options[i].input.value;		// update option values
+		// this.options[i].input.value = this.options[i].value;		// update form
+		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+	}
 
 	if (h.buffer != undefined)
 		h.createHexPage();
-
-	this.updateForm();
-
 };
 
 
-config.prototype.saveChanges = function() {
+config.prototype.resetConfig = function() {
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].value = this.options[i].default;			// update option values
+		this.options[i].input.value = this.options[i].default;		// update form
+		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+	}
+};
 
-	this.numberOfBytesPerRow = this.numberOfBytesPerRowInput.value;
-	this.numberOfRowsPerPage = this.numberOfRowsPerPageInput.value;
 
+config.prototype.updateCookies = function() {
+	for (let i=0; i < this.options.length; i++) {
+		setCookie(this.options[i].name, this.options[i].value);
+	}
 };
 
 
 config.prototype.updateForm = function() {
-
-	this.numberOfBytesPerRowInput.value = this.numberOfBytesPerRow;
-	this.numberOfRowsPerPageInput.value = this.numberOfRowsPerPage;
-
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].input.value = this.options[i].value;		// update form
+	}
 };

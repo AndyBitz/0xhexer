@@ -1,74 +1,3 @@
-function config() {
-
-	this.numberOfBytesPerRow = 8;
-	this.numberOfRowsPerPage = 128;
-
-	this.initConfigPage();
-
-}
-
-
-config.prototype.initConfigPage = function() {
-
-	this.applyButton = document.getElementById('applyChanges');
-	this.numberOfBytesPerRowInput = document.getElementById('numberOfBytesPerRow');
-	this.numberOfRowsPerPageInput = document.getElementById('numberOfRowsPerPage');
-
-	this.updateForm();
-
-	this.applyButton.addEventListener('click', this.applyChanges.bind(this));
-
-};
-
-
-config.prototype.applyChanges = function() {
-
-	this.saveChanges();
-
-	if (h.buffer != undefined)
-		h.createHexPage();
-
-	this.updateForm();
-
-};
-
-
-config.prototype.saveChanges = function() {
-
-	this.numberOfBytesPerRow = this.numberOfBytesPerRowInput.value;
-	this.numberOfRowsPerPage = this.numberOfRowsPerPageInput.value;
-
-};
-
-
-config.prototype.updateForm = function() {
-
-	this.numberOfBytesPerRowInput.value = this.numberOfBytesPerRow;
-	this.numberOfRowsPerPageInput.value = this.numberOfRowsPerPage;
-
-};
-/* Loops through array of DOM-Elements and adds a event to every one of them.
- * Don't use this on too much elements.
- * Use window.addEventListener() instead.
- */
-function addEventToArray(array, event_type, event_function) {
-	for (let i=0; i < array.length; i++) {
-		array[i].addEventListener(event_type, event_function);
-	}
-}
-
-
-/* 
- *
- *
- */
-function setDataOfArray(array, data_type, data) {
-	for (let i=0; i < array.length; i++) {
-		array[i][data_type] = data;
-	}
-}
-
-
 /* Convert a value (0-255) to an ASCII character
  * for the ASCII Row.
  * Characters that cannot be converted will be shown as a dot.
@@ -370,6 +299,120 @@ function toAscii(val) {
 	}
 
 }
+function config() {
+
+	this.options = [
+		{
+			name: 'numberOfBytesPerRow',
+			input: document.getElementById('numberOfBytesPerRow'),
+			value: parseInt(getCookie('numberOfBytesPerRow')) || 8,
+			default: 8
+		},
+		{
+			name: 'numberOfRowsPerPage',
+			input: document.getElementById('numberOfRowsPerPage'),
+			value: parseInt(getCookie('numberOfRowsPerPage')) || 128,
+			default: 128
+		}
+	];
+
+	this.initConfigPage();
+
+}
+
+
+config.prototype.initConfigPage = function() {
+
+	this.updateForm();
+
+	document.getElementById('applyChanges')
+		.addEventListener('click', this.applyChanges.bind(this));
+
+	document.getElementById('resetConfig')
+		.addEventListener('click', this.resetConfig.bind(this));
+
+};
+
+
+config.prototype.applyChanges = function() {
+
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].value = this.options[i].input.value;		// update option values
+		// this.options[i].input.value = this.options[i].value;		// update form
+		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+	}
+
+	if (h.buffer != undefined)
+		h.createHexPage();
+};
+
+
+config.prototype.resetConfig = function() {
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].value = this.options[i].default;			// update option values
+		this.options[i].input.value = this.options[i].default;		// update form
+		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+	}
+};
+
+
+config.prototype.updateCookies = function() {
+	for (let i=0; i < this.options.length; i++) {
+		setCookie(this.options[i].name, this.options[i].value);
+	}
+};
+
+
+config.prototype.updateForm = function() {
+	for (let i=0; i < this.options.length; i++) {
+		this.options[i].input.value = this.options[i].value;		// update form
+	}
+};
+/* Returns the value of a cookie.
+ * If the cookie is not set it will return null.
+ *
+ */
+function getCookie(name) {
+
+	let cookies = document.cookie.split(';');
+	for (let i=0; i < cookies.length; i++) {
+		let biscuit = cookies[i].split('=');
+		if (biscuit[0].trim() == name) {
+			return biscuit[1];
+		}
+
+	}
+
+	return null;
+
+}
+
+
+function setCookie(name, value) {
+	document.cookie = `${name}=${value}`;
+}
+ 
+
+/* Loops through array of DOM-Elements and adds a event to every one of them.
+ * Don't use this on too much elements.
+ * Use window.addEventListener() instead.
+ */
+function addEventToArray(array, event_type, event_function) {
+	for (let i=0; i < array.length; i++) {
+		array[i].addEventListener(event_type, event_function);
+	}
+}
+
+
+/* Loops through an array of DOM-Elements and allows
+ * to set on data type of them all to a specific value.
+ *
+ */
+function setDataOfArray(array, data_type, data) {
+	for (let i=0; i < array.length; i++) {
+		array[i][data_type] = data;
+	}
+}
 function hexer() {
 
 	this.init_u_area();
@@ -383,7 +426,7 @@ hexer.prototype.init_u_area = function() {
 	this.uareaicon = document.querySelector('#uploader i');
 	this.inputfield = document.getElementById('fileoc');
 
-	/* Click handling
+	/* Click handling.
 	 *
 	 */
 	this.uareaicon.addEventListener('click', (e)=>{
@@ -455,12 +498,12 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.pageRows = c.numberOfRowsPerPage;		// define rows of one section
-	this.bytesPerRow = c.numberOfBytesPerRow;	// define bytes that are shown per row
-	this.currentSection = 0;					// init current Section
+	this.bytesPerRow	= c.options[0].value;	// define bytes that are shown per row
+	this.pageRows 		= c.options[1].value;	// define rows of one section
+	this.currentSection	= 0;					// init current Section
 
-	this.totalRows = this.file.size/this.bytesPerRow;				// define total rows
-	this.totalSections = Math.floor(this.totalRows/this.pageRows);	// define total Sections;
+	this.totalRows		= this.file.size/this.bytesPerRow;				// define total rows
+	this.totalSections	= Math.floor(this.totalRows/this.pageRows);		// define total Sections;
 
 	setDataOfArray(
 		document.querySelectorAll('[data-sec-data="sec-total"]'),
@@ -693,11 +736,21 @@ function pages() {
 
 	this.pages = document.querySelectorAll('.pages .page[data-page-id]');
 	this.defaultPage = this.pages[0].getAttribute('data-page-id');
-	this.currentPage = this.defaultPage;
-	this.previousPage = this.currentPage;
-	this.loadPage();
+	this.previousPage = this.defaultPage;
+
 	this.initBackButtons();
 	this.initURLs();
+
+	if (window.location.pathname != '') {
+		this.loadPageById(window.location.pathname.replace('/', ''));
+	} else {
+		this.loadPageById(this.defaultPage);
+	}
+
+	window.addEventListener('popstate', (e)=>{
+		console.log(e.state);
+		this.loadPageById(e.state.previousPageId);
+	});
 
 }
 
@@ -720,25 +773,11 @@ pages.prototype.initURLs = function() {
 
 
 pages.prototype.initBackButtons = function() {
-
 	addEventToArray(
 		document.getElementsByClassName('back-btn'),
 		'click',
-		this.goBack.bind(this)
+		(e)=>{history.back();}
 		);
-
-};
-
-
-pages.prototype.goBack = function() {
-
-	if (this.currentPage == this.previousPage)
-		this.currentPage = this.defaultPage;
-	else
-		this.currentPage = this.previousPage;
-
-	this.loadPage();
-
 };
 
 
@@ -747,6 +786,7 @@ pages.prototype.loadPageById = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
 		console.error("Pages does not exist!");
+		t.newToast("Page does not exist!", toastt.SHORT);
 	} else {
 		this.previousPage = this.currentPage;
 		this.currentPage = sp;
@@ -757,6 +797,7 @@ pages.prototype.loadPageById = function(sp) {
 
 
 pages.prototype.loadPage = function() {
+	history.pushState({previousPageId: this.previousPage}, '', this.currentPage);
 	this.hideAllPages();
 	this.showCurrentPage();
 };
