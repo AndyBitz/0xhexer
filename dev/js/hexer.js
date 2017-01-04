@@ -140,6 +140,23 @@ hexer.prototype.createHexPage = function() {
 		this.previousSection.bind(this)
 		);
 
+	// up buttons
+	addEventToArray(
+		document.querySelectorAll('.go-up'),
+		'click',
+		(e)=>{
+			document.querySelector('[data-page-id="hex-view"]').scrollTop = 0;
+		});
+
+	// down buttons
+	addEventToArray(
+		document.querySelectorAll('.go-down'),
+		'click',
+		(e)=>{
+			let s = document.querySelector('[data-page-id="hex-view"]');
+			s.scrollTop = s.scrollHeight - s.offsetHeight;
+		});
+
 	this.loadSection();
 	p.loadPageById('hex-view');
 

@@ -290,6 +290,11 @@ a {
   @media (max-width: 1199px) {
     .section-tools .inline-on-desktop {
       margin: 0 0 12px 12px; } }
+  .section-tools .control-button {
+    margin: 12px 12px 0 12px; }
+    @media (min-width: 1200px) {
+      .section-tools .control-button {
+        margin: 12px 0 0 0; } }
 
 #toggle-settings {
   cursor: pointer; }
@@ -318,7 +323,8 @@ a {
         display: block; }
         .settings-menu #settings-menu ul li.list-separator {
           height: 2px;
-          background-color: #333333; }
+          background-color: #333333;
+          opacity: .3; }
         .settings-menu #settings-menu ul li a {
           display: block;
           padding: 8px 24px;
@@ -337,4 +343,8 @@ a {
 
 @media (min-width: 1200px) {
   .hide-on-desktop {
+    display: none; } }
+
+@media (max-width: 1199px) {
+  .hide-before-desktop {
     display: none; } }

@@ -83,6 +83,14 @@ pages.prototype.loadPageById = function(sp) {
 
 
 pages.prototype.loadPage = function() {
+
+	// don't load /hex-view if no file is loaded
+	if (this.currentPage == 'hex-view') {
+		if (h == undefined || h.buffer == undefined) {
+			this.currentPage = 'load';
+		}
+	}
+
 	history.pushState(null, '', this.currentPage);
 	this.hideAllPages();
 	this.showCurrentPage();
