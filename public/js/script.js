@@ -313,6 +313,12 @@ function config() {
 			input: document.getElementById('numberOfRowsPerPage'),
 			value: parseInt(getCookie('numberOfRowsPerPage')) || 128,
 			default: 128
+		},
+		{
+			name: 'cellSize',
+			input: document.getElementById('cellSize'),
+			value: parseInt(getCookie('cellSize')) || 1,
+			default: 1
 		}
 	];
 
@@ -337,9 +343,16 @@ config.prototype.initConfigPage = function() {
 config.prototype.applyChanges = function() {
 
 	for (let i=0; i < this.options.length; i++) {
-		this.options[i].value = this.options[i].input.value;		// update option values
-		// this.options[i].input.value = this.options[i].value;		// update form
-		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+		if (this.options[i].input.nodeName === "INPUT") {
+			this.options[i].value = this.options[i].input.value;		// update option values
+			// this.options[i].input.value = this.options[i].value;		// update form
+			setCookie(this.options[i].name, this.options[i].value);		// update cookies
+		} else if (this.options[i].input.nodeName === "SELECT") {
+			let selected_index = this.options[i].input.options.selectedIndex;			// get selected index
+			let updated_value = this.options[i].input.options[selected_index].value;	// get updated value
+			this.options[i].value = updated_value;										// update option values
+			setCookie(this.options[i].name, updated_value);								// update cookies
+		}
 	}
 
 	if (h.buffer != undefined)
@@ -349,9 +362,15 @@ config.prototype.applyChanges = function() {
 
 config.prototype.resetConfig = function() {
 	for (let i=0; i < this.options.length; i++) {
-		this.options[i].value = this.options[i].default;			// update option values
-		this.options[i].input.value = this.options[i].default;		// update form
-		setCookie(this.options[i].name, this.options[i].value);		// update cookies
+		if (this.options[i].input.nodeName === "INPUT") {
+			this.options[i].value = this.options[i].default;			// update option values
+			this.options[i].input.value = this.options[i].default;		// update form
+			setCookie(this.options[i].name, this.options[i].value);		// update cookies
+		} else if (this.options[i].input.nodeName === "SELECT") {
+			this.options[i].value = this.options[i].default;			// update option value
+			this.options[i].input.options.selectedIndex = 0;			// update form
+			setCookie(this.options[i].name, this.options[i].value);		// update cookies
+		}
 	}
 };
 
@@ -365,8 +384,27 @@ config.prototype.updateCookies = function() {
 
 config.prototype.updateForm = function() {
 	for (let i=0; i < this.options.length; i++) {
-		this.options[i].input.value = this.options[i].value;		// update form
+		if (this.options[i].input.nodeName === "INPUT") {
+			this.options[i].input.value = this.options[i].value;		// update form
+		} else if (this.options[i].input.nodeName === "SELECT") {
+			let opt_array = this.options[i].input.options;;
+			for (let j=0; j < opt_array.length; j++) {
+				if (opt_array[j].value == this.options[i].value) {
+					opt_array.selectedIndex = j;
+				}
+			}
+		}
 	}
+};
+
+
+config.prototype.getValue = function(name) {
+
+	for (let i=0; i < this.options.length; i++) {
+		if (this.options[i].name == name)
+			return this.options[i].value;
+	}
+
 };
 /* Returns the value of a cookie.
  * If the cookie is not set it will return null.
@@ -498,9 +536,10 @@ hexer.prototype.readFile = function() {
 hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
-	this.bytesPerRow	= c.options[0].value;	// define bytes that are shown per row
-	this.pageRows 		= c.options[1].value;	// define rows of one section
-	this.currentSection	= 0;					// init current Section
+	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
+	this.pageRows 		= c.getValue('numberOfRowsPerPage');	// define rows of one section
+	this.byteLength		= c.getValue('cellSize');				// define size of one cell
+	this.currentSection	= 0;									// init current Section
 
 	this.totalRows		= this.file.size/this.bytesPerRow;				// define total rows
 	this.totalSections	= Math.floor(this.totalRows/this.pageRows);		// define total Sections;

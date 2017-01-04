@@ -126,6 +126,7 @@ a {
       margin-top: 24px;
       margin-bottom: 3px;
       color: #757575; }
+    .pages .page .page-entry .page-entry-form-label select,
     .pages .page .page-entry .page-entry-form-label input {
       padding: 3px;
       border-radius: 0;
@@ -136,6 +137,7 @@ a {
       background-color: transparent;
       color: #757575;
       translate: all 200ms ease-out; }
+      .pages .page .page-entry .page-entry-form-label select:focus,
       .pages .page .page-entry .page-entry-form-label input:focus {
         outline: none;
         color: #333333;
@@ -348,3 +350,6 @@ a {
 @media (max-width: 1199px) {
   .hide-before-desktop {
     display: none; } }
+
+.info {
+  color: #757575; }
