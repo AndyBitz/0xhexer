@@ -1,4 +1,4 @@
-##0xHEXER##
+##0xHEXER
 
 
 <a href="https://hex.andybitz.io" target="_blank">https://hex.andybitz.io</a>
@@ -9,10 +9,9 @@ Uses gulp-sass and gulp-concat for development.
 
 
 ####TODOs
-* add up/down buttons to .section-tool
-* get rid of globals
 * get rid of inline-js
 * implement search function
 * HTML5 History API forward fix
 * History and Backup functions with local Storage
 * improve interface functionality
+* optimize kHandler in hexer.js

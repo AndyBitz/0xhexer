@@ -7,26 +7,45 @@
 	@media #{$mq-desktop}
 		margin: 20px;
 
-.ascii-field,
-.hex-field
+input.ascii-field,
+input.hex-field
 	width: 25px;
 	height: 25px;
 	background-color: rgba(0,0,0,0);
 	border: none;
 	text-align: center;
 	font-size: 1.1em;
+	font-family: "Roboto Mono", monospace;
+
+	&[maxlength="4"]
+		width: 50px;
+
+	&[maxlength="8"]
+		width: 100px;
+
+	&[maxlength="16"]
+		width: 200px;
 
 	@media #{$mq-desktop}
 		font-size: 1.3em;
 		width: 32px;
 		height: 32px;
 
+		&[maxlength="4"]
+			width: 64px;
+
+		&[maxlength="8"]
+			width: 128px;
+
+		&[maxlength="16"]
+			width: 256px;
+
+
 	&:focus
 		outline: none;
-		background-color: $col-active;
 
 	&.active
-		background-color: $col-active;
+		background-color: $col-font-info;
 		color: $col-inv;
 
 

@@ -242,27 +242,45 @@ a {
   .hex-page {
     margin: 20px; } }
 
-.ascii-field,
-.hex-field {
+input.ascii-field,
+input.hex-field {
   width: 25px;
   height: 25px;
   background-color: transparent;
   border: none;
   text-align: center;
-  font-size: 1.1em; }
+  font-size: 1.1em;
+  font-family: "Roboto Mono", monospace; }
+  input.ascii-field[maxlength="4"],
+  input.hex-field[maxlength="4"] {
+    width: 50px; }
+  input.ascii-field[maxlength="8"],
+  input.hex-field[maxlength="8"] {
+    width: 100px; }
+  input.ascii-field[maxlength="16"],
+  input.hex-field[maxlength="16"] {
+    width: 200px; }
   @media (min-width: 1200px) {
-    .ascii-field,
-    .hex-field {
+    input.ascii-field,
+    input.hex-field {
       font-size: 1.3em;
       width: 32px;
-      height: 32px; } }
-  .ascii-field:focus,
-  .hex-field:focus {
-    outline: none;
-    background-color: #2962FF; }
-  .ascii-field.active,
-  .hex-field.active {
-    background-color: #2962FF;
+      height: 32px; }
+      input.ascii-field[maxlength="4"],
+      input.hex-field[maxlength="4"] {
+        width: 64px; }
+      input.ascii-field[maxlength="8"],
+      input.hex-field[maxlength="8"] {
+        width: 128px; }
+      input.ascii-field[maxlength="16"],
+      input.hex-field[maxlength="16"] {
+        width: 256px; } }
+  input.ascii-field:focus,
+  input.hex-field:focus {
+    outline: none; }
+  input.ascii-field.active,
+  input.hex-field.active {
+    background-color: #757575;
     color: #fefefe; }
 
 .hex-row,

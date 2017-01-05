@@ -85,8 +85,13 @@ hexer.prototype.createHexPage = function() {
 
 	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
 	this.pageRows 		= c.getValue('numberOfRowsPerPage');	// define rows of one section
-	this.byteLength		= c.getValue('cellSize');				// define size of one cell
+	this.cellSize		= c.getValue('cellSize');				// define size of one cell
+	this.asciiFieldSize	= 1;									// define size of an asii-cell
 	this.currentSection	= 0;									// init current Section
+
+	if (this.bytesPerRow%this.cellSize != 0) {
+		this.bytesPerRow = this.cellSize*2;
+	}
 
 	this.totalRows		= this.file.size/this.bytesPerRow;				// define total rows
 	this.totalSections	= Math.floor(this.totalRows/this.pageRows);		// define total Sections;
@@ -182,54 +187,88 @@ hexer.prototype.loadSection = function() {
 	let row_counter = 0 + (this.currentSection*this.pageRows);
 	let c = 0 + (this.currentSection*this.pageRows*this.bytesPerRow);
 
-	setDataOfArray(
-		document.querySelectorAll('[data-sec-data="sec-cur"]'),
-		'value',
-		this.currentSection
-		);
-
 	let end_page = false;
+	let lastRow = '';
 	// generate section
 	for (let i=0; i < this.pageRows; i++) {
 
-		output += `<div data-row-nr="${row_counter++}">`; // start row
-		let hex_row = '';
+		// start row
+		output += `<div data-row-nr="${row_counter++}">`;
 		let ascii_row = '';
 
 		// generate both rows
-		for (let j=0; j < this.bytesPerRow; j++) {
-
-			if (this.buffer[c] == undefined) {
-				end_page = true;
-				break;
-			}
-
-			hex_row		+= `<input maxlength="2" class="hex-field" data-slice="${c}" value="${this.buffer[c].toString(16)}">`;
+		for (let j=0; j < this.bytesPerRow; j++, c++) {
+			if (this.buffer[c] == undefined) { end_page = true; break; }
 			ascii_row	+= `<input maxlength="1" class="ascii-field" data-slice="${c}" value="${toAscii(this.buffer[c])}">`;
-
-			c++;
 		}
 
-		output += `<div class="hex-row">${hex_row}</div><div class="ascii-row">${ascii_row}</div>`;
-
-		output += `</div>`;	// end row
-
 		if (end_page)
-			break;
+			lastRow = `style="width: ${document.querySelector('.hex-row').clientWidth}px;" `;
+
+		output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${ascii_row}</div>`;
+
+		// end row
+		output += `</div>`;
+
+		if (end_page) break;
 	}
+
+	setDataOfArray(
+		document.querySelectorAll('[data-sec-data="sec-cur"]'),
+		'value',
+		this.currentSection );
 
 	this.hexPage.innerHTML = output;
 	this.init_workspace();
 };
 
 
-hexer.prototype.toTop = function() {
-	this.hexPage.parentElement.scrollTop = 0;
+hexer.prototype.generateHexRow = function(counter) {
+	let ret	= '';
+	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
+
+	for (let i=0; i < (this.bytesPerRow/this.cellSize); i++, c += parseInt(this.cellSize)) {
+
+		let value = '';
+		let slice = [];
+		let end_page = false;
+
+		for (let j=0; j < this.cellSize; j++) {
+
+			if (this.buffer[c+j] == undefined) {
+				end_page = true;
+				break;
+			}
+
+			value += hexer.fillUpByte(this.buffer[c+j].toString(16));
+			slice.push(c+j);
+		}
+		
+		if (end_page) {
+			if (value != '')
+				ret += `<input maxlength="${value.length}" class="hex-field" data-slice="${slice.toString()}" value="${value}">`;
+		} else {
+			ret	+= `<input maxlength="${value.length}" class="hex-field" data-slice="${slice.toString()}" value="${value}">`;
+		}
+	}
+
+	return ret;
 };
 
 
-hexer.prototype.toBottom = function() {
-	this.hexPage.parentElement.scrollTop = this.hexPage.parentElement.scrollHeight;
+hexer.fillUpByte = (byte, size=2)=>{
+
+	if (byte.length == size)
+		return byte;
+
+	let filler = '';
+
+	for (let i=1; i < size; i++) {
+		filler += '0';
+	}
+	
+	return `${filler}${byte}`;
+
 };
 
 
@@ -268,15 +307,32 @@ hexer.prototype.init_workspace = function() {
 		e.target.select();
 
 		if ( e.target.className.match(/hex-field/g) ) {
-			
-			let ds = e.target.getAttribute('data-slice');	// data-slice
-			let pf = document.querySelector(`input.ascii-field[data-slice="${ds}"]`);	// partner field
-			pf.className += ' active';
+			// if hex-field is selected
+			let ds = e.target.getAttribute('data-slice').split(',');	// data-slice
+
+			for (let i=0; i < ds.length; i++) {
+				document
+					.querySelector(`input.ascii-field[data-slice="${ds[i]}"]`)
+					.className += ' active';	// partner field(s)
+			}
 
 		} else if ( e.target.className.match(/ascii-field/g) ) {
-
+			// if ascii-field is selected
 			let ds = e.target.getAttribute('data-slice');	// data-slice
-			let pf = document.querySelector(`input.hex-field[data-slice="${ds}"]`);	// partner field
+
+			// get the correct data-slice value
+			let start_value = ds;
+			let ds_arr = [];
+
+			while (start_value%this.cellSize != 0) {
+				if (start_value <= 0) break;
+				start_value--;
+			}
+			ds_arr.push(start_value);
+			for (let i=1; i < this.cellSize; i++) {
+				ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
+			}
+			let pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);	// partner field
 			pf.className += ' active';
 
 		}
@@ -289,28 +345,113 @@ hexer.prototype.init_workspace = function() {
 		if (e.target.nodeName != 'INPUT')
 			return;
 
-		let rm = document.querySelectorAll('.active');
-		let ds = e.target.getAttribute('data-slice');	// data-slice
+		let ds,		// data-slices
+			cvm,	// changed value map
+			cv,		// complete value of field
+			pf,		// partner field
+			pfv;	// partner field value
 
 		if ( e.target.className.match(/hex-field/g) ) {
-			
-			let pf = document.querySelector(`input.ascii-field[data-slice="${ds}"]`);	// partner field
-			pf.value = toAscii(parseInt(e.target.value, 16));
+			// if hex-field is changed
+
+			// array that contains all data-slices that got changed
+			ds = e.target.getAttribute('data-slice').split(',');
+
+			// create map of every changed value
+			cvf = [];
+			cv = document.querySelector(`input.hex-field[data-slice="${ds.toString()}"]`).value;
+			for (let i=0; i < ds.length; i++) {
+				cvf.push({
+					'data-slice'		: ds[i],
+					'new-value-dec'		: parseInt((cv[i+i]+cv[i+i+1]), 16)
+				});
+			}
+
+			// update buffer
+			for (let i=0; i < cvf.length; i++) {
+				this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+				this.updateAsciiFieldFromBuffer(cvf[i]['data-slice']);
+			}
 
 		} else if ( e.target.className.match(/ascii-field/g) ) {
+			// if ascii-field is changed
 
-			let pf = document.querySelector(`input.hex-field[data-slice="${ds}"]`);	// partner field
-			pf.value = e.target.value.charCodeAt(0).toString(16);
+			// array that contains all data-slices that got changed
+			ds = e.target.getAttribute('data-slice').split(',');
 
+			// create map of every changed value
+			cvf = [];
+			cv = document.querySelector(`input.ascii-field[data-slice="${ds.toString()}"]`).value;
+			for (let i=0; i < ds.length; i++) {
+				cvf.push({
+					'data-slice'		: ds[i],
+					'new-value-dec'		: cv[i].charCodeAt(0)
+				});			
+			}
+
+			// update buffer
+			for (let i=0; i < cvf.length; i++) {
+				this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+				this.updateHexFieldFromBuffer(cvf[i]['data-slice']);
+			}
 		}
-
-		this.buffer[ds] = parseInt(document.querySelector(`input.hex-field[data-slice="${ds}"]`).value, 16);
-
 	};
 
 
-	this.hexPage.addEventListener('keyup', kHandler);
-	this.hexPage.addEventListener('click', cHandler);
+	this.hexPage.addEventListener('keyup', kHandler.bind(this));
+	this.hexPage.addEventListener('click', cHandler.bind(this));
+
+};
+
+
+hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
+
+	// get the correct data-slice value
+	let start_value = parseInt(data_slice);
+	let ds_arr = [];
+
+	while (start_value%this.asciiFieldSize != 0) {
+		if (start_value <= 0) break;
+		start_value--;
+	}
+	ds_arr.push(start_value);
+	for (let i=1; i < this.asciiFieldSize; i++) {
+		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
+	}
+	// partner field
+	let pf = document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`);
+
+	let value_buffer = '';
+	for (let i=0; i < this.asciiFieldSize; i++) {
+		value_buffer += toAscii(this.buffer[ds_arr[i]]);
+	}
+	pf.value = value_buffer;
+
+};
+
+
+hexer.prototype.updateHexFieldFromBuffer = function(data_slice) {
+
+	// get the correct data-slice value
+	let start_value = parseInt(data_slice);
+	let ds_arr = [];
+
+	while (start_value%this.cellSize != 0) {
+		if (start_value <= 0) break;
+		start_value--;
+	}
+	ds_arr.push(start_value);
+	for (let i=1; i < this.cellSize; i++) {
+		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
+	}
+	// partner field
+	let pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);
+
+	let value_buffer = '';
+	for (let i=0; i < this.cellSize; i++) {
+		value_buffer += hexer.fillUpByte(this.buffer[ds_arr[i]].toString(16));
+	}
+	pf.value = value_buffer;
 
 };
 

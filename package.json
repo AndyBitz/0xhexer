@@ -1,6 +1,6 @@
 {
   "name": "hexer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Hex-Editor for Browsers based on Javascript",
   "main": "index.html",
   "scripts": {
