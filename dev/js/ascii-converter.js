@@ -15,7 +15,7 @@ function toAscii(val) {
 			return '!';
 
 		case 34:
-			return '"';
+			return '.';		// should be " but since html will see it as end of the attribute value it will be a dot
 
 		case 35:
 			return '#';

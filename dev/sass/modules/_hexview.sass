@@ -17,28 +17,94 @@ input.hex-field
 	font-size: 1.1em;
 	font-family: "Roboto Mono", monospace;
 
+	&[maxlength="3"]
+		width: 25+25px;
+
 	&[maxlength="4"]
-		width: 50px;
+		width: 25+25*2px;
+
+	&[maxlength="5"]
+		width: 25+25*3px;
+
+	&[maxlength="6"]
+		width: 25+25*4px;
+
+	&[maxlength="7"]
+		width: 25+25*5px;
 
 	&[maxlength="8"]
-		width: 100px;
+		width: 25+25*6px;
+
+	&[maxlength="9"]
+		width: 25+25*7px;
+
+	&[maxlength="10"]
+		width: 25+25*8px;
+
+	&[maxlength="11"]
+		width: 25+25*9px;
+
+	&[maxlength="12"]
+		width: 25+25*10px;
+
+	&[maxlength="13"]
+		width: 25+25*11px;
+
+	&[maxlength="14"]
+		width: 25+25*12px;
+
+	&[maxlength="15"]
+		width: 25+25*13px;
 
 	&[maxlength="16"]
-		width: 200px;
+		width: 25+25*14px;
 
 	@media #{$mq-desktop}
 		font-size: 1.3em;
 		width: 32px;
 		height: 32px;
 
+		&[maxlength="3"]
+			width: 32+16px;
+
 		&[maxlength="4"]
-			width: 64px;
+			width: 32+16*2px;
+
+		&[maxlength="5"]
+			width: 32+16*3px;
+
+		&[maxlength="6"]
+			width: 32+16*4px;
+
+		&[maxlength="7"]
+			width: 32+16*5px;
 
 		&[maxlength="8"]
-			width: 128px;
+			width: 32+16*6px;
+
+		&[maxlength="9"]
+			width: 32+16*7px;
+
+		&[maxlength="10"]
+			width: 32+16*8px;
+
+		&[maxlength="11"]
+			width: 32+16*9px;
+
+		&[maxlength="12"]
+			width: 32+16*10px;
+
+		&[maxlength="13"]
+			width: 32+16*11px;
+
+		&[maxlength="14"]
+			width: 32+16*12px;
+
+		&[maxlength="15"]
+			width: 32+16*13px;
 
 		&[maxlength="16"]
-			width: 256px;
+			width: 32+16*14px;
 
 
 	&:focus

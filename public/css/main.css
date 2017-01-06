@@ -258,27 +258,93 @@ input.hex-field {
   text-align: center;
   font-size: 1.1em;
   font-family: "Roboto Mono", monospace; }
+  input.ascii-field[maxlength="3"],
+  input.hex-field[maxlength="3"] {
+    width: 50px; }
   input.ascii-field[maxlength="4"],
   input.hex-field[maxlength="4"] {
-    width: 50px; }
+    width: 75px; }
+  input.ascii-field[maxlength="5"],
+  input.hex-field[maxlength="5"] {
+    width: 100px; }
+  input.ascii-field[maxlength="6"],
+  input.hex-field[maxlength="6"] {
+    width: 125px; }
+  input.ascii-field[maxlength="7"],
+  input.hex-field[maxlength="7"] {
+    width: 150px; }
   input.ascii-field[maxlength="8"],
   input.hex-field[maxlength="8"] {
-    width: 100px; }
+    width: 175px; }
+  input.ascii-field[maxlength="9"],
+  input.hex-field[maxlength="9"] {
+    width: 200px; }
+  input.ascii-field[maxlength="10"],
+  input.hex-field[maxlength="10"] {
+    width: 225px; }
+  input.ascii-field[maxlength="11"],
+  input.hex-field[maxlength="11"] {
+    width: 250px; }
+  input.ascii-field[maxlength="12"],
+  input.hex-field[maxlength="12"] {
+    width: 275px; }
+  input.ascii-field[maxlength="13"],
+  input.hex-field[maxlength="13"] {
+    width: 300px; }
+  input.ascii-field[maxlength="14"],
+  input.hex-field[maxlength="14"] {
+    width: 325px; }
+  input.ascii-field[maxlength="15"],
+  input.hex-field[maxlength="15"] {
+    width: 350px; }
   input.ascii-field[maxlength="16"],
   input.hex-field[maxlength="16"] {
-    width: 200px; }
+    width: 375px; }
   @media (min-width: 1200px) {
     input.ascii-field,
     input.hex-field {
       font-size: 1.3em;
       width: 32px;
       height: 32px; }
+      input.ascii-field[maxlength="3"],
+      input.hex-field[maxlength="3"] {
+        width: 48px; }
       input.ascii-field[maxlength="4"],
       input.hex-field[maxlength="4"] {
         width: 64px; }
+      input.ascii-field[maxlength="5"],
+      input.hex-field[maxlength="5"] {
+        width: 80px; }
+      input.ascii-field[maxlength="6"],
+      input.hex-field[maxlength="6"] {
+        width: 96px; }
+      input.ascii-field[maxlength="7"],
+      input.hex-field[maxlength="7"] {
+        width: 112px; }
       input.ascii-field[maxlength="8"],
       input.hex-field[maxlength="8"] {
         width: 128px; }
+      input.ascii-field[maxlength="9"],
+      input.hex-field[maxlength="9"] {
+        width: 144px; }
+      input.ascii-field[maxlength="10"],
+      input.hex-field[maxlength="10"] {
+        width: 160px; }
+      input.ascii-field[maxlength="11"],
+      input.hex-field[maxlength="11"] {
+        width: 176px; }
+      input.ascii-field[maxlength="12"],
+      input.hex-field[maxlength="12"] {
+        width: 192px; }
+      input.ascii-field[maxlength="13"],
+      input.hex-field[maxlength="13"] {
+        width: 208px; }
+      input.ascii-field[maxlength="14"],
+      input.hex-field[maxlength="14"] {
+        width: 224px; }
+      input.ascii-field[maxlength="15"],
+      input.hex-field[maxlength="15"] {
+        width: 240px; }
       input.ascii-field[maxlength="16"],
       input.hex-field[maxlength="16"] {
         width: 256px; } }
