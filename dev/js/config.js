@@ -29,6 +29,7 @@ function config() {
 config.prototype.initConfigPage = function() {
 
 	this.updateForm();
+	this.dependetValues();
 
 	document.getElementById('applyChanges')
 		.addEventListener('click', this.applyChanges.bind(this));
@@ -103,5 +104,19 @@ config.prototype.getValue = function(name) {
 		if (this.options[i].name == name)
 			return this.options[i].value;
 	}
+
+};
+
+
+config.prototype.dependetValues = function() {
+
+	// hex cell size & number of bytes per row
+	const cellSize = this.options[2];
+	const numberOfBytesPerRow = this.options[0];
+	cellSize.input.addEventListener('change', e=>{
+		numberOfBytesPerRow.input.step = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+		numberOfBytesPerRow.input.value = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+	});
+	numberOfBytesPerRow.input.step = cellSize.input.options[cellSize.input.options.selectedIndex].value;
 
 };

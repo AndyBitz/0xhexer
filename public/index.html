@@ -31,7 +31,6 @@
 
 	<link rel="stylesheet" type="text/css" href="/css/main.css?v=0">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i,700,700i|Roboto:400,400i,700,700i" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 <body>
@@ -62,7 +61,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</div>
 
 		<div class="toggle-settings">
-			<a id="toggle-settings"><i class="material-icons">more_vert</i></a>
+			<a id="toggle-settings">
+				<svg fill="#000000" height="42" viewBox="0 0 24 24" width="42" xmlns="http://www.w3.org/2000/svg">
+					<path d="M0 0h24v24H0z" fill="none"/>
+					<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+				</svg>
+			</a>
 		</div>
 
 	</div>
@@ -78,7 +82,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					<div class="up-func-cont">
 						<input id="fileoc" type="file" style="display: none">
 						<div id="up-status"></div>
-						<i class="material-icons">file_upload</i>
+						<a class="up-event">
+							<svg fill="#000000" height="96" viewBox="0 0 24 24" width="96" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 0h24v24H0z" fill="none"/>
+								<path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+							</svg>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -132,7 +141,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				
 				<div class="page-entry">
 					<div class="page-entry-header">
-						<a class="back-btn"><i class="material-icons">arrow_back</i></a>
+						<a class="back-btn">
+							<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 0h24v24H0z" fill="none"/>
+								<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+							</svg>
+						</a>
 						<h3>How to</h3>
 					</div>
 					
@@ -161,7 +175,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				
 				<div class="page-entry">
 					<div class="page-entry-header">
-						<a class="back-btn"><i class="material-icons">arrow_back</i></a>
+						<a class="back-btn">
+							<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 0h24v24H0z" fill="none"/>
+								<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+							</svg>
+						</a>
 						<h3>Config</h3>
 					</div>
 
@@ -186,12 +205,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 					<p class="page-entry-form-label">
 						<label>Number of Bytes per Row</label>
-						<input type="number" id="numberOfBytesPerRow" step="2">
+						<input min="0" type="number" id="numberOfBytesPerRow" step="2">
 					</p>
 
 					<p class="page-entry-form-label">
 						<label>Number of Rows per Page</label>
-						<input type="number" id="numberOfRowsPerPage">
+						<input min="0" type="number" id="numberOfRowsPerPage">
 					</p>
 
 				</div>

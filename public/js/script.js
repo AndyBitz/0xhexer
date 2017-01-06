@@ -330,6 +330,7 @@ function config() {
 config.prototype.initConfigPage = function() {
 
 	this.updateForm();
+	this.dependetValues();
 
 	document.getElementById('applyChanges')
 		.addEventListener('click', this.applyChanges.bind(this));
@@ -406,6 +407,21 @@ config.prototype.getValue = function(name) {
 	}
 
 };
+
+
+config.prototype.dependetValues = function() {
+
+	const cellSize = this.options[2];
+	const numberOfBytesPerRow = this.options[0];
+
+	const updateInput = ()=>{
+		numberOfBytesPerRow.input.step = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+		numberOfBytesPerRow.input.value = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+	};
+	
+	cellSize.input.addEventListener('change', e=>{updateInput();});
+
+};
 /* Returns the value of a cookie.
  * If the cookie is not set it will return null.
  *
@@ -461,7 +477,7 @@ function hexer() {
 
 hexer.prototype.init_u_area = function() {
 	this.uarea = document.getElementById('uploader');
-	this.uareaicon = document.querySelector('#uploader i');
+	this.uareaicon = document.querySelector('#uploader .up-event');
 	this.inputfield = document.getElementById('fileoc');
 
 	/* Click handling.

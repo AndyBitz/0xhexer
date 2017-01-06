@@ -39,6 +39,9 @@ a {
   color: #333333; }
   .back-btn:active, .back-btn:visited, .back-btn:hover {
     color: #333333; }
+  .back-btn svg {
+    fill: #fefefe;
+    transform: translateY(4px); }
 
 .btn {
   user-select: none;
@@ -136,7 +139,7 @@ a {
       border-bottom: 2px solid #448AFF;
       background-color: transparent;
       color: #757575;
-      translate: all 200ms ease-out; }
+      transition: all 200ms ease-out; }
       .pages .page .page-entry .page-entry-form-label select:focus,
       .pages .page .page-entry .page-entry-form-label input:focus {
         outline: none;
@@ -149,15 +152,19 @@ a {
   display: flex;
   justify-content: center;
   align-items: center; }
-  #uploader i {
+  #uploader a {
+    display: block;
     position: absolute;
-    font-size: 6em;
-    color: #fefefe;
+    fill: #fefefe;
     background-color: #2196F3;
     border-radius: 100%;
     padding: 8px;
-    cursor: pointer; }
-    #uploader i.drop-ready {
+    cursor: pointer;
+    height: 112px;
+    width: 112px; }
+    #uploader a svg {
+      fill: #fefefe; }
+    #uploader a.drop-ready {
       background-color: #4CAF50; }
 
 .up-func-cont {
@@ -317,7 +324,14 @@ input.hex-field {
         margin: 12px 0 0 0; } }
 
 #toggle-settings {
-  cursor: pointer; }
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center; }
+  #toggle-settings svg {
+    fill: #fefefe; }
 
 .settings-menu {
   position: absolute;

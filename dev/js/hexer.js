@@ -8,7 +8,7 @@ function hexer() {
 
 hexer.prototype.init_u_area = function() {
 	this.uarea = document.getElementById('uploader');
-	this.uareaicon = document.querySelector('#uploader i');
+	this.uareaicon = document.querySelector('#uploader .up-event');
 	this.inputfield = document.getElementById('fileoc');
 
 	/* Click handling.
