@@ -1,35 +1,17 @@
-var toastt = {
-	LONG: 6000,
-	SHORT: 3200
-};
+function Toast(text, time=Toast.SHORT) {
 
-function toast() {
+	const cont = document.getElementById('toast-container');
+	const chil = document.createElement('div');
+	chil.className = 'toast';
+	chil.innerHTML = `<p>${text}</p>`;
 
-	this.toast = document.getElementById('toast');
-	this.next = [];
-	this.active = false;
+	cont.appendChild(chil);
+
+	setTimeout(()=>{
+		chil.remove();
+	}, time);
+
 }
 
-toast.prototype.newToast = function(text, length) {
-
-	if (!this.active) {
-		this.active = true;
-
-		document.getElementById('toast-text').innerHTML = text;
-		this.toast.className = 'show';
-
-		this.timer = setTimeout( ()=>{
-			this.toast.className += ' hide';
-			setTimeout( ()=>{
-				this.toast.className = '';
-				this.toastText = '';
-				this.active = false;
-			}, 250 );
-
-		}, length);
-
-	} else {
-		document.getElementById('toast-text').innerHTML += '<br>' + text;
-	}
-
-};
+Toast.LONG	= 6000;
+Toast.SHORT	= 3200;

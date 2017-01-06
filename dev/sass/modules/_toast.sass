@@ -1,43 +1,27 @@
-.toast-positioner
-	display: flex;
-	justify-content: center;
-
-#toast
+.toast-position
 	position: fixed;
-	bottom: -100%;
-	min-height: 60px;
-	color: $col-inv;
-	background-color: $col-font;
-	margin: 0 12px 12px 12px;
-	border-radius: 4px;
-	max-width: 730px;
+	bottom: 0;
+	width: 100%;
+
+#toast-container
 	display: flex;
-	justify-content: center;
-	align-items: center;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	flex-direction: column;
+	transition: all 200ms ease-out;
 
-	p
-		margin: 0;
-		padding: 12px 24px;
-		font-size: 1.2em;
+	.toast
+		margin: auto;
+		width: 100%;
 
+		@media #{$mq-desktop}
+			width: 420px;
 
-.show
-	animation: -show-toast 200ms forwards;
+		background-color: $col-font;
+		margin-bottom: 12px;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+		border-radius: 2px;
 
-@keyframes -show-toast
-	0%
-		bottom: -100%;
-
-	100%
-		bottom: 0;
-
-.hide
-	animation: -hide-toast 200ms forwards;
-
-@keyframes -hide-toast
-	0%
-		bottom: 0;
-
-	100%
-		bottom: -100%;
+		p
+			padding: 21px 36px;
+			margin: 0;
+			color: $col-inv;
+			font-size: 1.2em;

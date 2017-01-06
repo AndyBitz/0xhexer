@@ -19,7 +19,6 @@ window.addEventListener('click', (e)=>{
 	c = new config();
 	s = new settings();
 	p = new pages();
-	t = new toast();
 	h = new hexer();
 
 }();

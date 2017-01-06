@@ -506,7 +506,7 @@ hexer.prototype.init_u_area = function() {
 
 	this.inputfield.addEventListener('change', (e)=>{
 		if (e.target.files.length > 1) {
-			t.newToast('Only one file is allowed');
+			
 		}
 		this.fileHandler(e.target.files[0]);
 	});
@@ -530,7 +530,7 @@ hexer.prototype.init_u_area = function() {
 		e.preventDefault();
 		
 		if (e.dataTransfer.files.length > 1) {
-			t.newToast('Only one file is allowed');
+			Toast('Only one file is allowed');
 		}
 
 		this.fileHandler(e.dataTransfer.files[0]);
@@ -552,12 +552,12 @@ hexer.prototype.readFile = function() {
 
 	fr.onloadstart = (e)=>{
 		document.getElementById('up-status').className = 'soft-blink';
-		t.newToast('Reading file.', toastt.SHORT);
+		Toast('Reading file.', Toast.SHORT);
 	};
 
 	fr.onloadend = (e)=>{
 		document.getElementById('up-status').className = 'done';
-		t.newToast('File has been read.', toastt.SHORT);
+		Toast('File has been read.', Toast.SHORT);
 		this.buffer = new Uint8Array(e.target.result);
 		this.createHexPage();
 	};
@@ -1000,7 +1000,7 @@ hexer.prototype.saveFile = function() {
 			document.getElementById('download-file').click();
 
 		} else {
-			t.newToast('You have to load a file in order to save it.', toastt.SHORT);
+			Toast('You have to load a file in order to save it.', Toast.SHORT);
 		}
 
 	});
@@ -1063,7 +1063,7 @@ pages.prototype.loadPreviousPage = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
 		console.error("Back: Page does not exist!");
-		t.newToast("Back: Page does not exist!", toastt.SHORT);
+		Toast('Back: Page does not exist!', Toast.SHORT);
 	} else {
 		this.currentPage = sp;
 
@@ -1080,7 +1080,7 @@ pages.prototype.loadPageById = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
 		console.error("Page does not exist!");
-		t.newToast("Page does not exist!", toastt.SHORT);
+		Toast('Page does not exist!', Toast.SHORT);
 	} else {
 		this.previousPage.push(this.currentPage);
 		this.currentPage = sp;
@@ -1157,41 +1157,23 @@ settings.prototype.toggle = function() {
 
 };
 
-var toastt = {
-	LONG: 6000,
-	SHORT: 3200
-};
+function Toast(text, time=Toast.SHORT) {
 
-function toast() {
+	const cont = document.getElementById('toast-container');
+	const chil = document.createElement('div');
+	chil.className = 'toast';
+	chil.innerHTML = `<p>${text}</p>`;
 
-	this.toast = document.getElementById('toast');
-	this.next = [];
-	this.active = false;
+	cont.appendChild(chil);
+
+	setTimeout(()=>{
+		chil.remove();
+	}, time);
+
 }
 
-toast.prototype.newToast = function(text, length) {
-
-	if (!this.active) {
-		this.active = true;
-
-		document.getElementById('toast-text').innerHTML = text;
-		this.toast.className = 'show';
-
-		this.timer = setTimeout( ()=>{
-			this.toast.className += ' hide';
-			setTimeout( ()=>{
-				this.toast.className = '';
-				this.toastText = '';
-				this.active = false;
-			}, 250 );
-
-		}, length);
-
-	} else {
-		document.getElementById('toast-text').innerHTML += '<br>' + text;
-	}
-
-};
+Toast.LONG	= 6000;
+Toast.SHORT	= 3200;
 var g, h, t, p, s, c;
 
 var mq = {
@@ -1213,7 +1195,6 @@ window.addEventListener('click', (e)=>{
 	c = new config();
 	s = new settings();
 	p = new pages();
-	t = new toast();
 	h = new hexer();
 
 }();

@@ -55,7 +55,7 @@ pages.prototype.loadPreviousPage = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
 		console.error("Back: Page does not exist!");
-		t.newToast("Back: Page does not exist!", toastt.SHORT);
+		Toast('Back: Page does not exist!', Toast.SHORT);
 	} else {
 		this.currentPage = sp;
 
@@ -72,7 +72,7 @@ pages.prototype.loadPageById = function(sp) {
 	let p = document.querySelector(`[data-page-id="${sp}"]`);
 	if (p == undefined) {
 		console.error("Page does not exist!");
-		t.newToast("Page does not exist!", toastt.SHORT);
+		Toast('Page does not exist!', Toast.SHORT);
 	} else {
 		this.previousPage.push(this.currentPage);
 		this.currentPage = sp;

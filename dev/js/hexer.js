@@ -20,7 +20,7 @@ hexer.prototype.init_u_area = function() {
 
 	this.inputfield.addEventListener('change', (e)=>{
 		if (e.target.files.length > 1) {
-			t.newToast('Only one file is allowed');
+			
 		}
 		this.fileHandler(e.target.files[0]);
 	});
@@ -44,7 +44,7 @@ hexer.prototype.init_u_area = function() {
 		e.preventDefault();
 		
 		if (e.dataTransfer.files.length > 1) {
-			t.newToast('Only one file is allowed');
+			Toast('Only one file is allowed');
 		}
 
 		this.fileHandler(e.dataTransfer.files[0]);
@@ -66,12 +66,12 @@ hexer.prototype.readFile = function() {
 
 	fr.onloadstart = (e)=>{
 		document.getElementById('up-status').className = 'soft-blink';
-		t.newToast('Reading file.', toastt.SHORT);
+		Toast('Reading file.', Toast.SHORT);
 	};
 
 	fr.onloadend = (e)=>{
 		document.getElementById('up-status').className = 'done';
-		t.newToast('File has been read.', toastt.SHORT);
+		Toast('File has been read.', Toast.SHORT);
 		this.buffer = new Uint8Array(e.target.result);
 		this.createHexPage();
 	};
@@ -514,7 +514,7 @@ hexer.prototype.saveFile = function() {
 			document.getElementById('download-file').click();
 
 		} else {
-			t.newToast('You have to load a file in order to save it.', toastt.SHORT);
+			Toast('You have to load a file in order to save it.', Toast.SHORT);
 		}
 
 	});
