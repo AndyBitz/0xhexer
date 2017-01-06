@@ -61,6 +61,8 @@ config.prototype.applyChanges = function() {
 		}
 	}
 
+	Toast('Changes have been applied!');
+
 	if (h.buffer != undefined)
 		h.createHexPage();
 };
