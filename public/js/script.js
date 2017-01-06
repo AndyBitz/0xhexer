@@ -319,7 +319,13 @@ function config() {
 			input: document.getElementById('cellSize'),
 			value: parseInt(getCookie('cellSize')) || 1,
 			default: 1
-		}
+		},
+		{
+			name: 'asciiFieldSize',
+			input: document.getElementById('asciiFieldSize'),
+			value: parseInt(getCookie('asciiFieldSize')) || 1,
+			default: 1
+		},
 	];
 
 	this.initConfigPage();
@@ -414,11 +420,23 @@ config.prototype.dependetValues = function() {
 	// hex cell size & number of bytes per row
 	const cellSize = this.options[2];
 	const numberOfBytesPerRow = this.options[0];
-	cellSize.input.addEventListener('change', e=>{
+	cellSize.input.addEventListener('change', ()=>{
 		numberOfBytesPerRow.input.step = cellSize.input.options[cellSize.input.options.selectedIndex].value;
 		numberOfBytesPerRow.input.value = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+		numberOfBytesPerRow.input.dispatchEvent(new Event('change'));
 	});
 	numberOfBytesPerRow.input.step = cellSize.input.options[cellSize.input.options.selectedIndex].value;
+
+
+	// ASCII field size shall not be bigger than bytes per row
+	const asciiFieldSize = this.options[3];
+	numberOfBytesPerRow.input.addEventListener('change', ()=>{
+		asciiFieldSize.input.max = numberOfBytesPerRow.input.value;
+		if (asciiFieldSize.input.value > numberOfBytesPerRow.input.value) {
+			asciiFieldSize.input.value = numberOfBytesPerRow.input.value;
+		}
+	});
+	asciiFieldSize.input.max = numberOfBytesPerRow.input.value;
 
 };
 /* Returns the value of a cookie.
@@ -554,7 +572,7 @@ hexer.prototype.createHexPage = function() {
 	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
 	this.pageRows 		= c.getValue('numberOfRowsPerPage');	// define rows of one section
 	this.cellSize		= c.getValue('cellSize');				// define size of one cell
-	this.asciiFieldSize	= 1;									// define size of an asii-cell
+	this.asciiFieldSize	= c.getValue('asciiFieldSize');			// define size of an asii-cell
 	this.currentSection	= 0;									// init current Section
 
 	if (this.bytesPerRow%this.cellSize != 0) {

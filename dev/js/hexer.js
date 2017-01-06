@@ -86,7 +86,7 @@ hexer.prototype.createHexPage = function() {
 	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
 	this.pageRows 		= c.getValue('numberOfRowsPerPage');	// define rows of one section
 	this.cellSize		= c.getValue('cellSize');				// define size of one cell
-	this.asciiFieldSize	= 1;									// define size of an asii-cell
+	this.asciiFieldSize	= c.getValue('asciiFieldSize');			// define size of an asii-cell
 	this.currentSection	= 0;									// init current Section
 
 	if (this.bytesPerRow%this.cellSize != 0) {
