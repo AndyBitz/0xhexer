@@ -61,7 +61,7 @@ hexer.prototype.fileHandler = function(file) {
 
 
 hexer.prototype.readFile = function() {
-	let fr = new FileReader();
+	const fr = new FileReader();
 	this.buffer;
 
 	fr.onloadstart = (e)=>{
@@ -205,7 +205,8 @@ hexer.prototype.loadSection = function() {
 		if (end_page)
 			lastRow = `style="width: ${document.querySelector('.hex-row').clientWidth}px;" `;
 
-		output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${ascii_row}</div>`;
+		// output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${ascii_row}</div>`;
+		output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${this.generateAsciiRow(i)}</div>`;
 
 		// end row
 		output += `</div>`;
@@ -220,6 +221,39 @@ hexer.prototype.loadSection = function() {
 
 	this.hexPage.innerHTML = output;
 	this.init_workspace();
+};
+
+
+hexer.prototype.generateAsciiRow = function(counter) {
+	let ret	= '';
+	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
+
+	for (let i=0; i < (this.bytesPerRow/this.asciiFieldSize); i++, c += parseInt(this.asciiFieldSize)) {
+
+		let value = '';
+		let slice = [];
+		let end_page = false;
+
+		for (let j=0; j < this.asciiFieldSize; j++) {
+
+			if (this.buffer[c+j] == undefined) {
+				end_page = true;
+				break;
+			}
+
+			value += toAscii(this.buffer[c+j]);
+			slice.push(c+j);
+		}
+		
+		if (end_page) {
+			if (value != '')
+				ret += `<input maxlength="${value.length}" class="ascii-field" data-slice="${slice.toString()}" value="${value}">`;
+		} else {
+			ret	+= `<input maxlength="${value.length}" class="ascii-field" data-slice="${slice.toString()}" value="${value}">`;
+		}
+	}
+
+	return ret;
 };
 
 
@@ -292,12 +326,14 @@ hexer.prototype.previousSection = function() {
 
 hexer.prototype.init_workspace = function() {
 
-	let cHandler = (e)=>{
+	const cHandler = (e)=>{
 
 		if (e.target.nodeName != 'INPUT')
 			return;
 
-		let rm = document.querySelectorAll('.active');
+		const rm = document.querySelectorAll('.active');
+		const ds = e.target.getAttribute('data-slice').split(',');	// data-slice
+		const ds_arr = [];
 
 		for (let i=0; i < rm.length; i++) {
 			rm[i].className = rm[i].className.replace(/ active||active/g, '');
@@ -308,21 +344,26 @@ hexer.prototype.init_workspace = function() {
 
 		if ( e.target.className.match(/hex-field/g) ) {
 			// if hex-field is selected
-			let ds = e.target.getAttribute('data-slice').split(',');	// data-slice
 
-			for (let i=0; i < ds.length; i++) {
-				document
-					.querySelector(`input.ascii-field[data-slice="${ds[i]}"]`)
-					.className += ' active';	// partner field(s)
+			// get the correct data-slice value
+			let start_value = ds[0];
+
+			while (start_value%this.asciiFieldSize != 0) {
+				if (start_value <= 0) break;
+				start_value--;
 			}
+			ds_arr.push(start_value);
+			for (let i=1; i < this.asciiFieldSize; i++) {
+				ds_arr.push( parseInt(ds_arr[0]) + parseInt(i));
+			}
+			document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`).className += ' active';
+
 
 		} else if ( e.target.className.match(/ascii-field/g) ) {
 			// if ascii-field is selected
-			let ds = e.target.getAttribute('data-slice');	// data-slice
 
 			// get the correct data-slice value
-			let start_value = ds;
-			let ds_arr = [];
+			let start_value = ds[0];
 
 			while (start_value%this.cellSize != 0) {
 				if (start_value <= 0) break;
@@ -330,23 +371,23 @@ hexer.prototype.init_workspace = function() {
 			}
 			ds_arr.push(start_value);
 			for (let i=1; i < this.cellSize; i++) {
-				ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
+				ds_arr.push( parseInt(ds_arr[0]) + parseInt(i));
 			}
-			let pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);	// partner field
-			pf.className += ' active';
-
+			document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`).className += ' active';
 		}
 
 	};
 
 
-	let kHandler = (e)=>{
+	const kHandler = (e)=>{
 
 		if (e.target.nodeName != 'INPUT')
 			return;
 
-		let ds,		// data-slices
-			cvm,	// changed value map
+		// array that contains all data-slices that got changed
+		const ds = e.target.getAttribute('data-slice').split(',');
+
+		let	cvm,	// changed value map
 			cv,		// complete value of field
 			pf,		// partner field
 			pfv;	// partner field value
@@ -354,47 +395,50 @@ hexer.prototype.init_workspace = function() {
 		if ( e.target.className.match(/hex-field/g) ) {
 			// if hex-field is changed
 
-			// array that contains all data-slices that got changed
-			ds = e.target.getAttribute('data-slice').split(',');
-
 			// create map of every changed value
 			cvf = [];
 			cv = document.querySelector(`input.hex-field[data-slice="${ds.toString()}"]`).value;
-			for (let i=0; i < ds.length; i++) {
-				cvf.push({
-					'data-slice'		: ds[i],
-					'new-value-dec'		: parseInt((cv[i+i]+cv[i+i+1]), 16)
-				});
-			}
+			try {
+				for (let i=0; i < ds.length; i++) {
+					cvf.push({
+						'data-slice'		: ds[i],
+						'new-value-dec'		: parseInt((cv[i+i]+cv[i+i+1]), 16)
+					});
+				}
 
-			// update buffer
-			for (let i=0; i < cvf.length; i++) {
-				this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
-				this.updateAsciiFieldFromBuffer(cvf[i]['data-slice']);
+				// update buffer
+				for (let i=0; i < cvf.length; i++) {
+					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					this.updateAsciiFieldFromBuffer(cvf[i]['data-slice']);
+				}
+			} catch(e) {
+				// TODO add error field to target
 			}
 
 		} else if ( e.target.className.match(/ascii-field/g) ) {
 			// if ascii-field is changed
 
-			// array that contains all data-slices that got changed
-			ds = e.target.getAttribute('data-slice').split(',');
-
 			// create map of every changed value
 			cvf = [];
 			cv = document.querySelector(`input.ascii-field[data-slice="${ds.toString()}"]`).value;
-			for (let i=0; i < ds.length; i++) {
-				cvf.push({
-					'data-slice'		: ds[i],
-					'new-value-dec'		: cv[i].charCodeAt(0)
-				});			
-			}
+			try {
+				for (let i=0; i < ds.length; i++) {
+					cvf.push({
+						'data-slice'		: ds[i],
+						'new-value-dec'		: cv[i].charCodeAt(0)
+					});			
+				}
 
-			// update buffer
-			for (let i=0; i < cvf.length; i++) {
-				this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
-				this.updateHexFieldFromBuffer(cvf[i]['data-slice']);
+				// update buffer
+				for (let i=0; i < cvf.length; i++) {
+					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					this.updateHexFieldFromBuffer(cvf[i]['data-slice']);
+				}
+			} catch(e) {
+				// TODO add error field to target
 			}
 		}
+
 	};
 
 
