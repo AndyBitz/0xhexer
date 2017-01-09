@@ -1,7 +1,7 @@
 ##0xHEXER
 
 
-<a href="https://andybitz.io/hex" target="_blank">https://hex.andybitz.io</a>
+<a href="https://andybitz.io/hex" target="_blank">https://andybitz.io/hex</a>
 or
 <a href="https://hexer-c18f5.firebaseapp.com/load" target="_blank">https://hexer-c18f5.firebaseapp.com</a>
 
