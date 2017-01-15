@@ -392,9 +392,9 @@ input.hex-field {
   top: 63px;
   z-index: 10; }
   .settings-menu #settings-menu {
-    transform-origin: top right;
+    transform-origin: 90% 10%;
     display: none;
-    animation: -show-menu 200ms forwards; }
+    animation: -show-menu 125ms forwards; }
     .settings-menu #settings-menu.show-menu {
       display: block; }
     .settings-menu #settings-menu ul {
