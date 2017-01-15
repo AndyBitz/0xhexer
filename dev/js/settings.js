@@ -1,4 +1,4 @@
-function settings() {
+function Settings() {
 
 	this.currentStatus = 'CLOSE';
 	document.getElementById('toggle-settings').addEventListener('click', this.toggle.bind(this));
@@ -12,7 +12,7 @@ function settings() {
 }
 
 
-settings.prototype.closeMenu = function() {
+Settings.prototype.closeMenu = function() {
 
 	this.currentStatus = 'CLOSE';
 	document.getElementById('settings-menu').className = '';
@@ -20,7 +20,7 @@ settings.prototype.closeMenu = function() {
 };
 
 
-settings.prototype.openMenu = function() {
+Settings.prototype.openMenu = function() {
 
 	this.currentStatus = 'OPEN';
 	document.getElementById('settings-menu').className = 'show-menu';
@@ -28,7 +28,7 @@ settings.prototype.openMenu = function() {
 };
 
 
-settings.prototype.toggle = function() {
+Settings.prototype.toggle = function() {
 
 	if (this.currentStatus == 'OPEN') {
 		this.closeMenu();

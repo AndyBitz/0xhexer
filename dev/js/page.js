@@ -1,35 +1,41 @@
-function pages() {
+function Pages() {
 
 	// variables
 	this.pages			= document.querySelectorAll('.pages .page[data-page-id]');
-	this.defaultPage	= this.pages[0].getAttribute('data-page-id');
+	this.defaultPage	= Pages.LOAD;
 	this.currentPage	= this.defaultPage;
-
-	this.previousPage	= [];
 
 	// inits
 	this.initBackButtons();
 	this.initURLs();
 
-	// 
+	// load new page
 	if (window.location.pathname != '/') {
 		this.loadPageById(window.location.pathname.replace('/', ''));
 	} else {
-		this.loadPageById(this.defaultPage);
+		this.loadPageById(this.defaultPage, false);
 	}
 
 	// events
 	window.addEventListener('popstate', (e)=>{
-		e.preventDefault();
-		this.loadPreviousPage(this.previousPage.pop() || this.defaultPage);
+		if (e.state)
+			this.loadPageById(e.state.id, false);
 	});
 
 }
 
+/* STATIC */
+// Page ids
+Pages.LOAD		= 'load';
+Pages.HEXVIEW	= 'hex-view';
+Pages.CONFIG	= 'config';
+Pages.HOWTO		= 'how-to';
 
-pages.prototype.initURLs = function() {
 
-	let elem = document.querySelectorAll('[data-page-url]');
+Pages.prototype.initURLs = function() {
+
+	const elem = document.querySelectorAll('[data-page-url]');
+
 	for (let i=0; i < elem.length; i++) {
 
 		let pageId = elem[i].getAttribute('data-page-url');
@@ -42,7 +48,7 @@ pages.prototype.initURLs = function() {
 };
 
 
-pages.prototype.initBackButtons = function() {
+Pages.prototype.initBackButtons = function() {
 	addEventToArray(
 		document.getElementsByClassName('back-btn'),
 		'click',
@@ -51,61 +57,53 @@ pages.prototype.initBackButtons = function() {
 };
 
 
-pages.prototype.loadPreviousPage = function(sp) {
-	let p = document.querySelector(`[data-page-id="${sp}"]`);
+Pages.prototype.loadPageById = function(sp, addHistoryState=true) {
+
+	const p = document.querySelector(`[data-page-id="${sp}"]`);
+
 	if (p == undefined) {
-		console.error("Back: Page does not exist!");
-		Toast('Back: Page does not exist!', Toast.SHORT);
-	} else {
-		this.currentPage = sp;
 
-		history.replaceState(null, '', sp);
-
-		this.hideAllPages();
-		this.showCurrentPage();
-	}
-
-};
-
-
-pages.prototype.loadPageById = function(sp) {
-	let p = document.querySelector(`[data-page-id="${sp}"]`);
-	if (p == undefined) {
-		console.error("Page does not exist!");
 		Toast('Page does not exist!', Toast.SHORT);
+		Toast(`Redirect to /${Pages.LOAD}.`, Toast.SHORT);
+
+		this.loadPageById(Pages.LOAD);
+
 	} else {
-		this.previousPage.push(this.currentPage);
 		this.currentPage = sp;
-		this.loadPage();
 	}
 
-};
+	/* CHANGE HISTORY STATE */
+	if (addHistoryState)
+		history.pushState({'id': sp}, '', this.currentPage);
+	else
+		history.replaceState({'id': sp}, '', this.currentPage);
 
-
-pages.prototype.loadPage = function() {
-
+	/* EXCEPTIONS */
 	// don't load /hex-view if no file is loaded
-	if (this.currentPage == 'hex-view') {
+	if (this.currentPage == Pages.HEXVIEW) {
 		if (h == undefined || h.buffer == undefined) {
-			this.currentPage = 'load';
+			Toast(`Can\'t load /${Pages.HEXVIEW}. No File loaded.`);
+			this.loadPageById(Pages.LOAD);
 		}
 	}
 
-	history.pushState(null, '', this.currentPage);
-	this.hideAllPages();
 	this.showCurrentPage();
+
 };
 
 
-	pages.prototype.hideAllPages = function() {
-		for (var i=0; i < this.pages.length; i++) {
-			this.pages[i].style.display = 'none';
-		}
-	};
+Pages.prototype.showCurrentPage = function() {
 
+	for (var i=0; i < this.pages.length; i++) {
+		this.pages[i].style.display = 'none';
+	}
 
-	pages.prototype.showCurrentPage = function() {
+	try {
 		document
 			.querySelector(`[data-page-id="${this.currentPage}"]`)
 			.style.display = 'block';
-	};
+	} catch (e) {
+		Toast('Pages does not exist.');
+	}
+
+};

@@ -1,4 +1,4 @@
-function config() {
+function Config() {
 
 	this.options = [
 		{
@@ -32,7 +32,7 @@ function config() {
 }
 
 
-config.prototype.initConfigPage = function() {
+Config.prototype.initConfigPage = function() {
 
 	this.updateForm();
 	this.dependetValues();
@@ -46,7 +46,7 @@ config.prototype.initConfigPage = function() {
 };
 
 
-config.prototype.applyChanges = function() {
+Config.prototype.applyChanges = function() {
 
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
@@ -68,7 +68,7 @@ config.prototype.applyChanges = function() {
 };
 
 
-config.prototype.resetConfig = function() {
+Config.prototype.resetConfig = function() {
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
 			this.options[i].value = this.options[i].default;			// update option values
@@ -83,14 +83,14 @@ config.prototype.resetConfig = function() {
 };
 
 
-config.prototype.updateCookies = function() {
+Config.prototype.updateCookies = function() {
 	for (let i=0; i < this.options.length; i++) {
 		setCookie(this.options[i].name, this.options[i].value);
 	}
 };
 
 
-config.prototype.updateForm = function() {
+Config.prototype.updateForm = function() {
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
 			this.options[i].input.value = this.options[i].value;		// update form
@@ -106,7 +106,7 @@ config.prototype.updateForm = function() {
 };
 
 
-config.prototype.getValue = function(name) {
+Config.prototype.getValue = function(name) {
 
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].name == name)
@@ -116,7 +116,7 @@ config.prototype.getValue = function(name) {
 };
 
 
-config.prototype.dependetValues = function() {
+Config.prototype.dependetValues = function() {
 
 	// hex cell size & number of bytes per row
 	const cellSize = this.options[2];

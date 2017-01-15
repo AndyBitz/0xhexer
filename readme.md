@@ -12,7 +12,6 @@ Uses gulp-sass and gulp-concat for development.
 ####TODOs
 * get rid of inline-js
 * implement search function
-* HTML5 History API forward fix
 * History and Backup functions with local Storage
 * improve interface functionality
 * optimize kHandler in hexer.js

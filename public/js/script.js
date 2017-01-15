@@ -299,7 +299,7 @@ function toAscii(val) {
 	}
 
 }
-function config() {
+function Config() {
 
 	this.options = [
 		{
@@ -333,7 +333,7 @@ function config() {
 }
 
 
-config.prototype.initConfigPage = function() {
+Config.prototype.initConfigPage = function() {
 
 	this.updateForm();
 	this.dependetValues();
@@ -347,7 +347,7 @@ config.prototype.initConfigPage = function() {
 };
 
 
-config.prototype.applyChanges = function() {
+Config.prototype.applyChanges = function() {
 
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
@@ -369,7 +369,7 @@ config.prototype.applyChanges = function() {
 };
 
 
-config.prototype.resetConfig = function() {
+Config.prototype.resetConfig = function() {
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
 			this.options[i].value = this.options[i].default;			// update option values
@@ -384,14 +384,14 @@ config.prototype.resetConfig = function() {
 };
 
 
-config.prototype.updateCookies = function() {
+Config.prototype.updateCookies = function() {
 	for (let i=0; i < this.options.length; i++) {
 		setCookie(this.options[i].name, this.options[i].value);
 	}
 };
 
 
-config.prototype.updateForm = function() {
+Config.prototype.updateForm = function() {
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].input.nodeName === "INPUT") {
 			this.options[i].input.value = this.options[i].value;		// update form
@@ -407,7 +407,7 @@ config.prototype.updateForm = function() {
 };
 
 
-config.prototype.getValue = function(name) {
+Config.prototype.getValue = function(name) {
 
 	for (let i=0; i < this.options.length; i++) {
 		if (this.options[i].name == name)
@@ -417,7 +417,7 @@ config.prototype.getValue = function(name) {
 };
 
 
-config.prototype.dependetValues = function() {
+Config.prototype.dependetValues = function() {
 
 	// hex cell size & number of bytes per row
 	const cellSize = this.options[2];
@@ -486,7 +486,7 @@ function setDataOfArray(array, data_type, data) {
 		array[i][data_type] = data;
 	}
 }
-function hexer() {
+function Hexer() {
 
 	this.init_u_area();
 	this.saveFile();
@@ -494,7 +494,7 @@ function hexer() {
 }
 
 
-hexer.prototype.init_u_area = function() {
+Hexer.prototype.init_u_area = function() {
 	this.uarea = document.getElementById('uploader');
 	this.uareaicon = document.querySelector('#uploader .up-event');
 	this.inputfield = document.getElementById('fileoc');
@@ -542,13 +542,13 @@ hexer.prototype.init_u_area = function() {
 };
 
 
-hexer.prototype.fileHandler = function(file) {
+Hexer.prototype.fileHandler = function(file) {
 	this.file = file;
 	this.readFile();
 };
 
 
-hexer.prototype.readFile = function() {
+Hexer.prototype.readFile = function() {
 	const fr = new FileReader();
 	this.buffer;
 
@@ -568,7 +568,7 @@ hexer.prototype.readFile = function() {
 };
 
 
-hexer.prototype.createHexPage = function() {
+Hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
 	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
@@ -666,7 +666,7 @@ hexer.prototype.createHexPage = function() {
 };
 
 
-hexer.prototype.loadSection = function() {
+Hexer.prototype.loadSection = function() {
 
 	if (this.currentSection < 0 || this.currentSection > this.totalSections)
 		this.currentSection = 0;
@@ -712,7 +712,7 @@ hexer.prototype.loadSection = function() {
 };
 
 
-hexer.prototype.generateAsciiRow = function(counter) {
+Hexer.prototype.generateAsciiRow = function(counter) {
 	let ret	= '';
 	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
 
@@ -745,7 +745,7 @@ hexer.prototype.generateAsciiRow = function(counter) {
 };
 
 
-hexer.prototype.generateHexRow = function(counter) {
+Hexer.prototype.generateHexRow = function(counter) {
 	let ret	= '';
 	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
 
@@ -762,7 +762,7 @@ hexer.prototype.generateHexRow = function(counter) {
 				break;
 			}
 
-			value += hexer.fillUpByte(this.buffer[c+j].toString(16));
+			value += Hexer.fillUpByte(this.buffer[c+j].toString(16));
 			slice.push(c+j);
 		}
 		
@@ -778,7 +778,7 @@ hexer.prototype.generateHexRow = function(counter) {
 };
 
 
-hexer.fillUpByte = (byte, size=2)=>{
+Hexer.fillUpByte = (byte, size=2)=>{
 
 	if (byte.length == size)
 		return byte;
@@ -794,7 +794,7 @@ hexer.fillUpByte = (byte, size=2)=>{
 };
 
 
-hexer.prototype.nextSection = function() {
+Hexer.prototype.nextSection = function() {
 	this.currentSection++;
 	if (this.currentSection > this.totalSections)
 		this.currentSection = this.totalSections;
@@ -803,7 +803,7 @@ hexer.prototype.nextSection = function() {
 };
 
 
-hexer.prototype.previousSection = function() {
+Hexer.prototype.previousSection = function() {
 	this.currentSection--;
 	if (this.currentSection < 0)
 		this.currentSection = 0;
@@ -812,7 +812,7 @@ hexer.prototype.previousSection = function() {
 };
 
 
-hexer.prototype.init_workspace = function() {
+Hexer.prototype.init_workspace = function() {
 
 	const cHandler = (e)=>{
 
@@ -936,11 +936,11 @@ hexer.prototype.init_workspace = function() {
 };
 
 
-hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
+Hexer.prototype.updateAsciiFieldFromBuffer = function(dataSlice) {
 
 	// get the correct data-slice value
-	let start_value = parseInt(data_slice);
-	let ds_arr = [];
+	let start_value = parseInt(dataSlice);
+	const ds_arr = [];
 
 	while (start_value%this.asciiFieldSize != 0) {
 		if (start_value <= 0) break;
@@ -951,7 +951,7 @@ hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
 		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
 	}
 	// partner field
-	let pf = document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`);
+	const pf = document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`);
 
 	let value_buffer = '';
 	for (let i=0; i < this.asciiFieldSize; i++) {
@@ -962,11 +962,11 @@ hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
 };
 
 
-hexer.prototype.updateHexFieldFromBuffer = function(data_slice) {
+Hexer.prototype.updateHexFieldFromBuffer = function(dataSlice) {
 
 	// get the correct data-slice value
-	let start_value = parseInt(data_slice);
-	let ds_arr = [];
+	let start_value = parseInt(dataSlice);
+	const ds_arr = [];
 
 	while (start_value%this.cellSize != 0) {
 		if (start_value <= 0) break;
@@ -977,26 +977,26 @@ hexer.prototype.updateHexFieldFromBuffer = function(data_slice) {
 		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
 	}
 	// partner field
-	let pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);
+	const pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);
 
 	let value_buffer = '';
 	for (let i=0; i < this.cellSize; i++) {
-		value_buffer += hexer.fillUpByte(this.buffer[ds_arr[i]].toString(16));
+		value_buffer += Hexer.fillUpByte(this.buffer[ds_arr[i]].toString(16));
 	}
 	pf.value = value_buffer;
 
 };
 
 
-hexer.prototype.saveFile = function() {
+Hexer.prototype.saveFile = function() {
 
 
 	document.getElementById('savefile').addEventListener('click', (e)=>{
 
 		if (this.buffer != undefined) {
 
-			let b = new Blob([this.buffer.buffer], {"type": "application/octet-binary"});
-			let u = URL.createObjectURL(b);
+			const b = new Blob([this.buffer.buffer], {"type": "application/octet-binary"});
+			const u = URL.createObjectURL(b);
 			document.getElementById('download-file').href = u;
 			document.getElementById('download-file').download = this.file.name;
 			document.getElementById('download-file').click();
@@ -1008,38 +1008,44 @@ hexer.prototype.saveFile = function() {
 	});
 
 };
-function pages() {
+function Pages() {
 
 	// variables
 	this.pages			= document.querySelectorAll('.pages .page[data-page-id]');
-	this.defaultPage	= this.pages[0].getAttribute('data-page-id');
+	this.defaultPage	= Pages.LOAD;
 	this.currentPage	= this.defaultPage;
-
-	this.previousPage	= [];
 
 	// inits
 	this.initBackButtons();
 	this.initURLs();
 
-	// 
+	// load new page
 	if (window.location.pathname != '/') {
 		this.loadPageById(window.location.pathname.replace('/', ''));
 	} else {
-		this.loadPageById(this.defaultPage);
+		this.loadPageById(this.defaultPage, false);
 	}
 
 	// events
 	window.addEventListener('popstate', (e)=>{
-		e.preventDefault();
-		this.loadPreviousPage(this.previousPage.pop() || this.defaultPage);
+		if (e.state)
+			this.loadPageById(e.state.id, false);
 	});
 
 }
 
+/* STATIC */
+// Page ids
+Pages.LOAD		= 'load';
+Pages.HEXVIEW	= 'hex-view';
+Pages.CONFIG	= 'config';
+Pages.HOWTO		= 'how-to';
 
-pages.prototype.initURLs = function() {
 
-	let elem = document.querySelectorAll('[data-page-url]');
+Pages.prototype.initURLs = function() {
+
+	const elem = document.querySelectorAll('[data-page-url]');
+
 	for (let i=0; i < elem.length; i++) {
 
 		let pageId = elem[i].getAttribute('data-page-url');
@@ -1052,7 +1058,7 @@ pages.prototype.initURLs = function() {
 };
 
 
-pages.prototype.initBackButtons = function() {
+Pages.prototype.initBackButtons = function() {
 	addEventToArray(
 		document.getElementsByClassName('back-btn'),
 		'click',
@@ -1061,65 +1067,57 @@ pages.prototype.initBackButtons = function() {
 };
 
 
-pages.prototype.loadPreviousPage = function(sp) {
-	let p = document.querySelector(`[data-page-id="${sp}"]`);
+Pages.prototype.loadPageById = function(sp, addHistoryState=true) {
+
+	const p = document.querySelector(`[data-page-id="${sp}"]`);
+
 	if (p == undefined) {
-		console.error("Back: Page does not exist!");
-		Toast('Back: Page does not exist!', Toast.SHORT);
-	} else {
-		this.currentPage = sp;
 
-		history.replaceState(null, '', sp);
-
-		this.hideAllPages();
-		this.showCurrentPage();
-	}
-
-};
-
-
-pages.prototype.loadPageById = function(sp) {
-	let p = document.querySelector(`[data-page-id="${sp}"]`);
-	if (p == undefined) {
-		console.error("Page does not exist!");
 		Toast('Page does not exist!', Toast.SHORT);
+		Toast(`Redirect to /${Pages.LOAD}.`, Toast.SHORT);
+
+		this.loadPageById(Pages.LOAD);
+
 	} else {
-		this.previousPage.push(this.currentPage);
 		this.currentPage = sp;
-		this.loadPage();
 	}
 
-};
+	/* CHANGE HISTORY STATE */
+	if (addHistoryState)
+		history.pushState({'id': sp}, '', this.currentPage);
+	else
+		history.replaceState({'id': sp}, '', this.currentPage);
 
-
-pages.prototype.loadPage = function() {
-
+	/* EXCEPTIONS */
 	// don't load /hex-view if no file is loaded
-	if (this.currentPage == 'hex-view') {
+	if (this.currentPage == Pages.HEXVIEW) {
 		if (h == undefined || h.buffer == undefined) {
-			this.currentPage = 'load';
+			Toast(`Can\'t load /${Pages.HEXVIEW}. No File loaded.`);
+			this.loadPageById(Pages.LOAD);
 		}
 	}
 
-	history.pushState(null, '', this.currentPage);
-	this.hideAllPages();
 	this.showCurrentPage();
+
 };
 
 
-	pages.prototype.hideAllPages = function() {
-		for (var i=0; i < this.pages.length; i++) {
-			this.pages[i].style.display = 'none';
-		}
-	};
+Pages.prototype.showCurrentPage = function() {
 
+	for (var i=0; i < this.pages.length; i++) {
+		this.pages[i].style.display = 'none';
+	}
 
-	pages.prototype.showCurrentPage = function() {
+	try {
 		document
 			.querySelector(`[data-page-id="${this.currentPage}"]`)
 			.style.display = 'block';
-	};
-function settings() {
+	} catch (e) {
+		Toast('Pages does not exist.');
+	}
+
+};
+function Settings() {
 
 	this.currentStatus = 'CLOSE';
 	document.getElementById('toggle-settings').addEventListener('click', this.toggle.bind(this));
@@ -1133,7 +1131,7 @@ function settings() {
 }
 
 
-settings.prototype.closeMenu = function() {
+Settings.prototype.closeMenu = function() {
 
 	this.currentStatus = 'CLOSE';
 	document.getElementById('settings-menu').className = '';
@@ -1141,7 +1139,7 @@ settings.prototype.closeMenu = function() {
 };
 
 
-settings.prototype.openMenu = function() {
+Settings.prototype.openMenu = function() {
 
 	this.currentStatus = 'OPEN';
 	document.getElementById('settings-menu').className = 'show-menu';
@@ -1149,7 +1147,7 @@ settings.prototype.openMenu = function() {
 };
 
 
-settings.prototype.toggle = function() {
+Settings.prototype.toggle = function() {
 
 	if (this.currentStatus == 'OPEN') {
 		this.closeMenu();
@@ -1194,9 +1192,9 @@ window.addEventListener('click', (e)=>{
 
 !function init() {
 
-	c = new config();
-	s = new settings();
-	p = new pages();
-	h = new hexer();
+	c = new Config();
+	s = new Settings();
+	p = new Pages();
+	h = new Hexer();
 
 }();

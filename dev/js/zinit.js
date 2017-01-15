@@ -16,9 +16,9 @@ window.addEventListener('click', (e)=>{
 
 !function init() {
 
-	c = new config();
-	s = new settings();
-	p = new pages();
-	h = new hexer();
+	c = new Config();
+	s = new Settings();
+	p = new Pages();
+	h = new Hexer();
 
 }();

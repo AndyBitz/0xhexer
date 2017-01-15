@@ -1,4 +1,4 @@
-function hexer() {
+function Hexer() {
 
 	this.init_u_area();
 	this.saveFile();
@@ -6,7 +6,7 @@ function hexer() {
 }
 
 
-hexer.prototype.init_u_area = function() {
+Hexer.prototype.init_u_area = function() {
 	this.uarea = document.getElementById('uploader');
 	this.uareaicon = document.querySelector('#uploader .up-event');
 	this.inputfield = document.getElementById('fileoc');
@@ -54,13 +54,13 @@ hexer.prototype.init_u_area = function() {
 };
 
 
-hexer.prototype.fileHandler = function(file) {
+Hexer.prototype.fileHandler = function(file) {
 	this.file = file;
 	this.readFile();
 };
 
 
-hexer.prototype.readFile = function() {
+Hexer.prototype.readFile = function() {
 	const fr = new FileReader();
 	this.buffer;
 
@@ -80,7 +80,7 @@ hexer.prototype.readFile = function() {
 };
 
 
-hexer.prototype.createHexPage = function() {
+Hexer.prototype.createHexPage = function() {
 	this.hexPage = document.getElementById('hex-view');
 
 	this.bytesPerRow	= c.getValue('numberOfBytesPerRow');	// define bytes that are shown per row
@@ -178,7 +178,7 @@ hexer.prototype.createHexPage = function() {
 };
 
 
-hexer.prototype.loadSection = function() {
+Hexer.prototype.loadSection = function() {
 
 	if (this.currentSection < 0 || this.currentSection > this.totalSections)
 		this.currentSection = 0;
@@ -224,7 +224,7 @@ hexer.prototype.loadSection = function() {
 };
 
 
-hexer.prototype.generateAsciiRow = function(counter) {
+Hexer.prototype.generateAsciiRow = function(counter) {
 	let ret	= '';
 	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
 
@@ -257,7 +257,7 @@ hexer.prototype.generateAsciiRow = function(counter) {
 };
 
 
-hexer.prototype.generateHexRow = function(counter) {
+Hexer.prototype.generateHexRow = function(counter) {
 	let ret	= '';
 	let c	= counter*(this.bytesPerRow)+(this.currentSection*this.pageRows*h.bytesPerRow);
 
@@ -274,7 +274,7 @@ hexer.prototype.generateHexRow = function(counter) {
 				break;
 			}
 
-			value += hexer.fillUpByte(this.buffer[c+j].toString(16));
+			value += Hexer.fillUpByte(this.buffer[c+j].toString(16));
 			slice.push(c+j);
 		}
 		
@@ -290,7 +290,7 @@ hexer.prototype.generateHexRow = function(counter) {
 };
 
 
-hexer.fillUpByte = (byte, size=2)=>{
+Hexer.fillUpByte = (byte, size=2)=>{
 
 	if (byte.length == size)
 		return byte;
@@ -306,7 +306,7 @@ hexer.fillUpByte = (byte, size=2)=>{
 };
 
 
-hexer.prototype.nextSection = function() {
+Hexer.prototype.nextSection = function() {
 	this.currentSection++;
 	if (this.currentSection > this.totalSections)
 		this.currentSection = this.totalSections;
@@ -315,7 +315,7 @@ hexer.prototype.nextSection = function() {
 };
 
 
-hexer.prototype.previousSection = function() {
+Hexer.prototype.previousSection = function() {
 	this.currentSection--;
 	if (this.currentSection < 0)
 		this.currentSection = 0;
@@ -324,7 +324,7 @@ hexer.prototype.previousSection = function() {
 };
 
 
-hexer.prototype.init_workspace = function() {
+Hexer.prototype.init_workspace = function() {
 
 	const cHandler = (e)=>{
 
@@ -448,11 +448,11 @@ hexer.prototype.init_workspace = function() {
 };
 
 
-hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
+Hexer.prototype.updateAsciiFieldFromBuffer = function(dataSlice) {
 
 	// get the correct data-slice value
-	let start_value = parseInt(data_slice);
-	let ds_arr = [];
+	let start_value = parseInt(dataSlice);
+	const ds_arr = [];
 
 	while (start_value%this.asciiFieldSize != 0) {
 		if (start_value <= 0) break;
@@ -463,7 +463,7 @@ hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
 		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
 	}
 	// partner field
-	let pf = document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`);
+	const pf = document.querySelector(`input.ascii-field[data-slice="${ds_arr.toString()}"]`);
 
 	let value_buffer = '';
 	for (let i=0; i < this.asciiFieldSize; i++) {
@@ -474,11 +474,11 @@ hexer.prototype.updateAsciiFieldFromBuffer = function(data_slice) {
 };
 
 
-hexer.prototype.updateHexFieldFromBuffer = function(data_slice) {
+Hexer.prototype.updateHexFieldFromBuffer = function(dataSlice) {
 
 	// get the correct data-slice value
-	let start_value = parseInt(data_slice);
-	let ds_arr = [];
+	let start_value = parseInt(dataSlice);
+	const ds_arr = [];
 
 	while (start_value%this.cellSize != 0) {
 		if (start_value <= 0) break;
@@ -489,26 +489,26 @@ hexer.prototype.updateHexFieldFromBuffer = function(data_slice) {
 		ds_arr.push( parseInt(ds_arr[0]) + parseInt(i) );
 	}
 	// partner field
-	let pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);
+	const pf = document.querySelector(`input.hex-field[data-slice="${ds_arr.toString()}"]`);
 
 	let value_buffer = '';
 	for (let i=0; i < this.cellSize; i++) {
-		value_buffer += hexer.fillUpByte(this.buffer[ds_arr[i]].toString(16));
+		value_buffer += Hexer.fillUpByte(this.buffer[ds_arr[i]].toString(16));
 	}
 	pf.value = value_buffer;
 
 };
 
 
-hexer.prototype.saveFile = function() {
+Hexer.prototype.saveFile = function() {
 
 
 	document.getElementById('savefile').addEventListener('click', (e)=>{
 
 		if (this.buffer != undefined) {
 
-			let b = new Blob([this.buffer.buffer], {"type": "application/octet-binary"});
-			let u = URL.createObjectURL(b);
+			const b = new Blob([this.buffer.buffer], {"type": "application/octet-binary"});
+			const u = URL.createObjectURL(b);
 			document.getElementById('download-file').href = u;
 			document.getElementById('download-file').download = this.file.name;
 			document.getElementById('download-file').click();
