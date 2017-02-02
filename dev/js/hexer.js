@@ -384,6 +384,13 @@ Hexer.prototype.init_workspace = function() {
 		if (e.target.nodeName != 'INPUT')
 			return;
 
+		if (e.keyCode === 20 ||
+			e.keyCode === 16 ||
+			e.keyCode === 17 ||
+			(e.keyCode === 67 && e.ctrlKey)) {
+			return;
+		}
+
 		// array that contains all data-slices that got changed
 		const ds = e.target.getAttribute('data-slice').split(',');
 
@@ -409,6 +416,8 @@ Hexer.prototype.init_workspace = function() {
 				// update buffer
 				for (let i=0; i < cvf.length; i++) {
 					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					const detail = {'BufferIndex': cvf[i]['data-slice'], 'BufferValue': this.buffer[cvf[i]['data-slice']]};
+					window.dispatchEvent(new CustomEvent('BufferChange', {'detail': detail}));
 					this.updateAsciiFieldFromBuffer(cvf[i]['data-slice']);
 				}
 			} catch(e) {
@@ -432,6 +441,8 @@ Hexer.prototype.init_workspace = function() {
 				// update buffer
 				for (let i=0; i < cvf.length; i++) {
 					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					const detail = {'BufferIndex': cvf[i]['data-slice'], 'BufferValue': this.buffer[cvf[i]['data-slice']]};
+					window.dispatchEvent(new CustomEvent('BufferChange', {'detail': detail}));
 					this.updateHexFieldFromBuffer(cvf[i]['data-slice']);
 				}
 			} catch(e) {
@@ -471,6 +482,7 @@ Hexer.prototype.updateAsciiFieldFromBuffer = function(dataSlice) {
 	}
 	pf.value = value_buffer;
 
+	// window.dispatchEvent(new CustomEvent('BufferChange', {'detail': {'BufferIndex': ds_arr[0]}}));
 };
 
 
@@ -497,6 +509,7 @@ Hexer.prototype.updateHexFieldFromBuffer = function(dataSlice) {
 	}
 	pf.value = value_buffer;
 
+	// window.dispatchEvent(new CustomEvent('BufferChange', {'detail': {'BufferIndex': ds_arr[0]}}));
 };
 
 

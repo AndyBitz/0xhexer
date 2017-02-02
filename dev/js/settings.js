@@ -22,8 +22,8 @@ function Settings() {
 }
 
 /* STATIC */
-Settings.OPEN	= 1;
-Settings.CLOSE	= 0;
+Settings.OPEN	= 'OPEN';
+Settings.CLOSE	= 'CLOSE';
 Settings.TIMER	= 10;
 
 
@@ -45,14 +45,14 @@ Settings.prototype.openMenu = function() {
 
 
 Settings.prototype.changeStatus = function() {
-	this.currentStatus = (this.currentStatus == Settings.OPEN) ? Settings.CLOSE : Settings.OPEN;
+	this.currentStatus = (this.currentStatus === Settings.OPEN) ? Settings.CLOSE : Settings.OPEN;
 	this.lastChange = new Date().getTime();
 };
 
 
 Settings.prototype.toggle = function() {
 
-	if (this.currentStatus == Settings.OPEN) {
+	if (this.currentStatus === Settings.OPEN) {
 		this.closeMenu();
 	} else {
 		this.openMenu();

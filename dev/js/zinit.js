@@ -1,4 +1,4 @@
-var g, h, t, p, s, c;
+var g, h, t, p, s, c, his;
 
 var mq = {
 	desktop: window.matchMedia("(min-width: 1200px)").matches
@@ -20,5 +20,7 @@ window.addEventListener('click', (e)=>{
 	s = new Settings();
 	p = new Pages();
 	h = new Hexer();
+
+	his = new HistoryHandler();
 
 }();

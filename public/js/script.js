@@ -872,6 +872,13 @@ Hexer.prototype.init_workspace = function() {
 		if (e.target.nodeName != 'INPUT')
 			return;
 
+		if (e.keyCode === 20 ||
+			e.keyCode === 16 ||
+			e.keyCode === 17 ||
+			(e.keyCode === 67 && e.ctrlKey)) {
+			return;
+		}
+
 		// array that contains all data-slices that got changed
 		const ds = e.target.getAttribute('data-slice').split(',');
 
@@ -897,6 +904,8 @@ Hexer.prototype.init_workspace = function() {
 				// update buffer
 				for (let i=0; i < cvf.length; i++) {
 					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					const detail = {'BufferIndex': cvf[i]['data-slice'], 'BufferValue': this.buffer[cvf[i]['data-slice']]};
+					window.dispatchEvent(new CustomEvent('BufferChange', {'detail': detail}));
 					this.updateAsciiFieldFromBuffer(cvf[i]['data-slice']);
 				}
 			} catch(e) {
@@ -920,6 +929,8 @@ Hexer.prototype.init_workspace = function() {
 				// update buffer
 				for (let i=0; i < cvf.length; i++) {
 					this.buffer[cvf[i]['data-slice']] = cvf[i]['new-value-dec'];
+					const detail = {'BufferIndex': cvf[i]['data-slice'], 'BufferValue': this.buffer[cvf[i]['data-slice']]};
+					window.dispatchEvent(new CustomEvent('BufferChange', {'detail': detail}));
 					this.updateHexFieldFromBuffer(cvf[i]['data-slice']);
 				}
 			} catch(e) {
@@ -959,6 +970,7 @@ Hexer.prototype.updateAsciiFieldFromBuffer = function(dataSlice) {
 	}
 	pf.value = value_buffer;
 
+	// window.dispatchEvent(new CustomEvent('BufferChange', {'detail': {'BufferIndex': ds_arr[0]}}));
 };
 
 
@@ -985,6 +997,7 @@ Hexer.prototype.updateHexFieldFromBuffer = function(dataSlice) {
 	}
 	pf.value = value_buffer;
 
+	// window.dispatchEvent(new CustomEvent('BufferChange', {'detail': {'BufferIndex': ds_arr[0]}}));
 };
 
 
@@ -1005,6 +1018,100 @@ Hexer.prototype.saveFile = function() {
 			Toast('You have to load a file in order to save it.', Toast.SHORT);
 		}
 
+	});
+
+};
+function HistoryHandler() {
+	this.undoArray = [];
+	this.redoArray = [];
+
+	this.arrayLength = 1000;
+
+	this.init();
+
+}
+
+/* Gets back one step in history.
+ * Basically Undo.
+ */
+HistoryHandler.prototype.goBack = function () {
+	if (h.buffer) {
+		const last = this.undoArray.pop();
+		this.redoArray.push(last);
+		h.buffer[last.index] = last.value;
+		h.updateAsciiFieldFromBuffer(last.index);
+		h.updateHexFieldFromBuffer(last.index);
+
+		// delete objects from redoArray if there are more than 1000 entries
+		if (this.redoArray.length >= this.arrayLength) {
+			const start = this.redoArray.length-this.arrayLength;
+			const end 	= this.redoArray.length;
+			this.redoArray = this.redoArray.slice(start, end);
+		}
+
+	}
+};
+
+
+/* Undo undo, so Redo.
+ *
+ */
+HistoryHandler.prototype.goForward = function () {
+	if (h.buffer) {
+		const next = this.redoArray.pop();
+		this.redoArray.push(next);
+		h.buffer[next.index] = next.value;
+		h.updateAsciiFieldFromBuffer(next.index);
+		h.updateHexFieldFromBuffer(next.index);
+	}
+};
+
+
+/* Init EventListeners.
+ *
+ */
+HistoryHandler.prototype.init = function () {
+
+	window.addEventListener('keyup', (e)=>{
+		if (e.keyCode === 90 && e.ctrlKey) {
+			this.goBack();
+		}
+	});
+
+	window.addEventListener('keyup', (e)=>{
+		if (e.keyCode === 89 && e.ctrlKey) {
+			this.goForward();
+		}
+	});
+
+	addEventToArray(
+		document.querySelectorAll('[data-action="undo"]'),
+		'click',
+		(e)=>{
+			his.goBack();
+		});
+
+	addEventToArray(
+		document.querySelectorAll('[data-action="redo"]'),
+		'click',
+		(e)=>{
+			his.goForward();
+		});
+
+	window.addEventListener('BufferChange', (e)=>{
+		const stateObj = {
+			'index': e.detail.BufferIndex,
+			'value': e.detail.BufferValue
+		};
+
+		this.undoArray.push(stateObj);
+
+		// delete objects from undoArray if there are more than 1000 entries
+		if (this.undoArray.length >= this.arrayLength) {
+			const start = this.undoArray.length-this.arrayLength;
+			const end 	= this.undoArray.length;
+			this.undoArray = this.undoArray.slice(start, end);
+		}
 	});
 
 };
@@ -1141,8 +1248,8 @@ function Settings() {
 }
 
 /* STATIC */
-Settings.OPEN	= 1;
-Settings.CLOSE	= 0;
+Settings.OPEN	= 'OPEN';
+Settings.CLOSE	= 'CLOSE';
 Settings.TIMER	= 10;
 
 
@@ -1164,14 +1271,14 @@ Settings.prototype.openMenu = function() {
 
 
 Settings.prototype.changeStatus = function() {
-	this.currentStatus = (this.currentStatus == Settings.OPEN) ? Settings.CLOSE : Settings.OPEN;
+	this.currentStatus = (this.currentStatus === Settings.OPEN) ? Settings.CLOSE : Settings.OPEN;
 	this.lastChange = new Date().getTime();
 };
 
 
 Settings.prototype.toggle = function() {
 
-	if (this.currentStatus == Settings.OPEN) {
+	if (this.currentStatus === Settings.OPEN) {
 		this.closeMenu();
 	} else {
 		this.openMenu();
@@ -1196,7 +1303,7 @@ function Toast(text, time=Toast.SHORT) {
 
 Toast.LONG	= 6000;
 Toast.SHORT	= 3200;
-var g, h, t, p, s, c;
+var g, h, t, p, s, c, his;
 
 var mq = {
 	desktop: window.matchMedia("(min-width: 1200px)").matches
@@ -1218,5 +1325,7 @@ window.addEventListener('click', (e)=>{
 	s = new Settings();
 	p = new Pages();
 	h = new Hexer();
+
+	his = new HistoryHandler();
 
 }();
