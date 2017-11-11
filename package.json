@@ -4,18 +4,19 @@
   "description": "Hex-Editor for Browsers based on Javascript",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "gulp sass js"
   },
   "keywords": [
     "hex",
     "editor",
     "web"
   ],
-  "author": "andy bitz",
+  "author": "Andy Bitz",
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
-    "gulp-sass": "^3.0.0"
+    "gulp-sass": "^3.1.0"
   }
 }

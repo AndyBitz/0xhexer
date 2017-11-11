@@ -690,8 +690,10 @@ Hexer.prototype.loadSection = function() {
 			ascii_row	+= `<input maxlength="1" class="ascii-field" data-slice="${c}" value="${toAscii(this.buffer[c])}">`;
 		}
 
-		if (end_page)
-			lastRow = `style="width: ${document.querySelector('.hex-row').clientWidth}px;" `;
+		const row = document.querySelector('.hex-row')
+
+		if (end_page && row)
+			lastRow = `style="width: ${row.clientWidth}px;" `;
 
 		// output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${ascii_row}</div>`;
 		output += `<div ${lastRow}class="hex-row">${this.generateHexRow(i)}</div><div class="ascii-row">${this.generateAsciiRow(i)}</div>`;
@@ -1088,14 +1090,14 @@ HistoryHandler.prototype.init = function () {
 		document.querySelectorAll('[data-action="undo"]'),
 		'click',
 		(e)=>{
-			his.goBack();
+			this.goBack();
 		});
 
 	addEventToArray(
 		document.querySelectorAll('[data-action="redo"]'),
 		'click',
 		(e)=>{
-			his.goForward();
+			this.goForward();
 		});
 
 	window.addEventListener('BufferChange', (e)=>{
